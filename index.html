@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#4f5f6f">
+  <title>Programacao Vida e Ministerio</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Navegacao principal">
+      <div class="brand">
+        <div class="brand-mark">VM</div>
+        <div>
+          <strong>Vida e Ministerio</strong>
+          <span id="churchLabel">Congregacao</span>
+        </div>
+      </div>
+      <nav class="nav" id="nav"></nav>
+      <div class="sync-card">
+        <span class="status-dot"></span>
+        <div>
+          <strong>Offline pronto</strong>
+          <small>Dados salvos neste dispositivo</small>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="icon-button mobile-only" id="menuButton" aria-label="Abrir menu">Menu</button>
+        <div>
+          <p class="eyebrow" id="sectionLabel">Semana atual</p>
+          <h1 id="pageTitle">Programacao</h1>
+        </div>
+        <div class="topbar-actions">
+          <button class="ghost" id="saveButton">Salvar</button>
+          <button class="primary" id="generateButton">Gerar mes</button>
+        </div>
+      </header>
+      <section id="view" class="view" aria-live="polite"></section>
+    </main>
+  </div>
+
+  <dialog id="dialog" class="dialog">
+    <form method="dialog">
+      <h2 id="dialogTitle"></h2>
+      <div id="dialogMessage"></div>
+      <div class="dialog-actions">
+        <button value="cancel" class="ghost">Cancelar</button>
+        <button value="confirm" class="primary">Confirmar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <template id="personFormTemplate">
+    <div class="form-grid" id="personForm">
+      <label>Nome completo<input name="name" required></label>
+      <label>Sexo
+        <select name="gender">
+          <option value="M">Masculino</option>
+          <option value="F">Feminino</option>
+        </select>
+      </label>
+      <label>Privilegio
+        <select name="role">
+          <option>Anciao</option>
+          <option>Servo ministerial</option>
+          <option>Publicador batizado</option>
+          <option>Publicadora batizada</option>
+        </select>
+      </label>
+      <label>Disponibilidade
+        <select name="status">
+          <option value="active">Ativo</option>
+          <option value="blocked">Indisponivel</option>
+        </select>
+      </label>
+    </div>
+  </template>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
