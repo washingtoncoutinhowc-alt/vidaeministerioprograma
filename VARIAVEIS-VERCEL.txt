@@ -1,0 +1,27 @@
+Configure estas variaveis em Vercel > Project > Settings > Environment Variables:
+
+SUPABASE_URL
+Cole a URL do projeto no Supabase.
+
+SUPABASE_SERVICE_ROLE_KEY
+Cole a chave service_role/secret do Supabase. Nao use anon key.
+
+ADMIN_PASSWORD
+Senha que voce vai digitar para entrar como administrador.
+
+ADMIN_TOKEN
+Texto secreto grande, por exemplo:
+programacao-vila-brasil-2026-token-secreto-938271
+
+Depois de salvar as variaveis, faca Redeploy na Vercel.
+
+Link publico:
+https://seu-site.vercel.app/
+
+Link administrador:
+https://seu-site.vercel.app/?admin=1
+
+Para testar a API:
+https://seu-site.vercel.app/api/state
+
+Se aparecer pagina em branco ou erro antigo, use Ctrl + F5.

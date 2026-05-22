@@ -1,9 +1,10 @@
 const STATE_KEY = "programacao";
 
 function json(response, status, data) {
-  response.statusCode = status;
-  response.setHeader("Content-Type", "application/json; charset=utf-8");
-  response.setHeader("Cache-Control", "no-store");
+  response.writeHead(status, {
+    "Content-Type": "application/json; charset=utf-8",
+    "Cache-Control": "no-store"
+  });
   response.end(JSON.stringify(data));
 }
 
@@ -32,17 +33,18 @@ function supabaseHeaders() {
 }
 
 async function getState(response) {
-  const url = `${process.env.SUPABASE_URL}/rest/v1/app_state?key=eq.${encodeURIComponent(STATE_KEY)}&select=value&limit=1`;
+  const baseUrl = String(process.env.SUPABASE_URL || "").replace(/\/$/, "");
+  const url = `${baseUrl}/rest/v1/app_state?key=eq.${encodeURIComponent(STATE_KEY)}&select=value&limit=1`;
   const result = await fetch(url, { headers: supabaseHeaders() });
-  if (!result.ok) throw new Error("Falha ao ler Supabase");
+  if (!result.ok) {
+    const detail = await result.text().catch(() => "");
+    throw new Error(`Falha ao ler Supabase: ${result.status} ${detail}`);
+  }
   const rows = await result.json();
   if (!rows.length) {
-    response.statusCode = 204;
-    response.setHeader("Cache-Control", "no-store");
-    response.end();
-    return;
+    return json(response, 200, { ok: true, empty: true });
   }
-  json(response, 200, rows[0].value);
+  return json(response, 200, rows[0].value);
 }
 
 async function saveState(request, response) {
@@ -51,7 +53,8 @@ async function saveState(request, response) {
 
   const body = await readBody(request);
   const value = JSON.parse(body);
-  const url = `${process.env.SUPABASE_URL}/rest/v1/app_state`;
+  const baseUrl = String(process.env.SUPABASE_URL || "").replace(/\/$/, "");
+  const url = `${baseUrl}/rest/v1/app_state`;
   const result = await fetch(url, {
     method: "POST",
     headers: {
@@ -64,15 +67,21 @@ async function saveState(request, response) {
     const detail = await result.text().catch(() => "");
     throw new Error(`Falha ao salvar Supabase: ${result.status} ${detail}`);
   }
-  json(response, 200, { ok: true });
+  return json(response, 200, { ok: true });
 }
 
 module.exports = async function handler(request, response) {
   try {
     if (request.method === "GET") return getState(response);
     if (request.method === "POST") return saveState(request, response);
-    json(response, 405, { ok: false });
+    return json(response, 405, { ok: false, message: "Metodo nao permitido" });
   } catch (error) {
-    json(response, 500, { ok: false, message: error.message });
+    return json(response, 200, {
+      ok: false,
+      message: error && error.message ? error.message : String(error),
+      hasSupabaseUrl: Boolean(process.env.SUPABASE_URL),
+      hasSupabaseKey: Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY),
+      hasAdminToken: Boolean(process.env.ADMIN_TOKEN)
+    });
   }
 };
