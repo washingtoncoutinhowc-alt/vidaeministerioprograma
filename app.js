@@ -1,4 +1,4 @@
-const STORE_KEY = "pvm-professional-state-v1";
+﻿const STORE_KEY = "pvm-professional-state-v1";
 const API_STATE_URL = location.protocol === "file:" ? "http://127.0.0.1:4182/api/state" : "/api/state";
 const ADMIN_TOKEN_KEY = "pvm-admin-token";
 const ADMIN_MODE = new URLSearchParams(location.search).has("admin");
@@ -411,6 +411,7 @@ const defaultState = {
     treasuresServants: true,
     ministrySisters: true,
     avoidSamePair: true,
+    noSamePersonSameWeek: true,
     bibleReadingBrothers: true,
     lifeElders: true,
     fiveMinuteTalkBrothers: true
@@ -845,13 +846,22 @@ function personSelect(id, selected, people, weekId, partNumber, field) {
   const options = [`<option value="">A definir</option>`].concat(people.map(person => {
     const recent = lastAssignment(person.name);
     const usedThisMonth = monthlyAssignmentCount(person.name, weekId) > 0;
-    const suffix = usedThisMonth ? " - usado neste mes" : recent ? ` - ultima: ${recent}` : " - sem historico";
-    const optionClass = usedThisMonth ? " class=\"used-month\"" : "";
-    const optionStyle = usedThisMonth ? " style=\"color:#c34d4d;font-weight:700\"" : "";
-    return `<option value="${esc(person.name)}" ${person.name === selected ? "selected" : ""}${optionClass}${optionStyle}>${esc(person.name + suffix)}</option>`;
+    const weekDetails = state.rules.noSamePersonSameWeek ? weeklyAssignmentDetails(person.name, weekId, partNumber, field) : [];
+    const usedThisWeek = weekDetails.length > 0 && person.name !== selected;
+    const genderClass = person.gender === "M" ? "gender-m" : "gender-f";
+    const suffix = usedThisWeek
+      ? ` - ja esta em ${weekDetails[0].part}`
+      : usedThisMonth ? " - usado neste mes" : recent ? ` - ultima: ${recent}` : " - sem historico";
+    const optionClass = [usedThisMonth ? "used-month" : "", usedThisWeek ? "used-week" : "", genderClass].filter(Boolean).join(" ");
+    const optionStyle = person.gender === "M"
+      ? " style=\"color:#22815a;font-weight:800\""
+      : " style=\"color:#c34d4d;font-weight:800\"";
+    return `<option value="${esc(person.name)}" ${person.name === selected ? "selected" : ""}${usedThisWeek ? " disabled" : ""} class="${optionClass}"${optionStyle}>${esc(person.name + suffix)}</option>`;
   }));
   const selectedUsed = selected && monthlyAssignmentCount(selected, weekId) > 0;
-  return `<div class="person-select-wrap"><select class="${selectedUsed ? "used-month-select" : ""}" data-week="${weekId}" data-part="${partNumber}" data-field="${field}" id="${id}">${options.join("")}</select>${selectedUsed ? `<button class="used-month-info" type="button" data-used-details="${esc(selected)}" data-used-week="${esc(weekId)}">Ver parte</button>` : ""}</div>`;
+  const selectedPerson = state.people.find(person => person.name === selected);
+  const selectedGenderClass = selectedPerson?.gender === "M" ? "selected-male" : selectedPerson?.gender === "F" ? "selected-female" : "";
+  return `<div class="person-select-wrap"><select class="${[selectedUsed ? "used-month-select" : "", selectedGenderClass].filter(Boolean).join(" ")}" data-week="${weekId}" data-part="${partNumber}" data-field="${field}" id="${id}">${options.join("")}</select>${selectedUsed ? `<button class="used-month-info ${selectedPerson?.gender === "M" ? "male" : ""}" type="button" data-used-details="${esc(selected)}" data-used-week="${esc(weekId)}">Ver parte</button>` : ""}</div>`;
 }
 
 function renderPrograms() {
@@ -970,8 +980,9 @@ function renderRules() {
     chairmanElder: "Presidente somente anciao",
     openingPrayerChairman: "Oracao inicial acompanha o presidente",
     treasuresServants: "Tesouros prioriza anciaos e servos ministeriais",
-    ministrySisters: "Partes do ministerio com irmas",
+    ministrySisters: "Partes do ministerio com publicadores batizados",
     avoidSamePair: "Evitar repetir a mesma dupla",
+    noSamePersonSameWeek: "Nao repetir a mesma pessoa na semana",
     bibleReadingBrothers: "Leitura da Biblia com publicadores masculinos",
     lifeElders: "Vida crista prioriza anciaos e libera servos no rodizio",
     fiveMinuteTalkBrothers: "Discurso de 5 minutos somente com publicadores masculinos"
@@ -1043,12 +1054,12 @@ function generateScheduleForWeek(week) {
 function eligible(type) {
   const people = activePeople();
   return people.filter(person => {
+    if (type === "ministry") return ["Publicador batizado", "Publicadora batizada"].includes(person.role);
     if (person.capabilities && type in person.capabilities) return person.capabilities[type];
     if (person.capabilities && type === "ministry") return person.capabilities.ministryPrimary || person.capabilities.ministryHelper;
     if (type === "chairman") return person.role === "Anciao";
     if (type === "treasures") return ["Anciao", "Servo ministerial"].includes(person.role);
     if (type === "bibleReading") return person.gender === "M" && person.role === "Publicador batizado";
-    if (type === "ministry") return person.gender === "F";
     if (type === "life") return person.role === "Anciao";
     if (type === "studyConductor") return person.role === "Anciao";
     if (type === "studyReader") return person.gender === "M" && person.role === "Publicador batizado";
@@ -1106,6 +1117,27 @@ function monthlyAssignmentDetails(name, weekId) {
   return rows;
 }
 
+function weeklyAssignmentDetails(name, weekId, ignorePartNumber = "", ignoreField = "") {
+  const week = state.weeks.find(item => item.id === weekId);
+  const schedule = state.schedules[weekId];
+  if (!week || !schedule || !name) return [];
+  const rows = [];
+  if (schedule.chairman === name && ignorePartNumber !== "chairman") {
+    rows.push({ week: week.label, part: "Presidente e oração inicial", role: "Presidente" });
+  }
+  for (const [partNumber, item] of Object.entries(schedule.parts || {})) {
+    const part = week.parts.find(candidate => String(candidate.n) === String(partNumber));
+    const partTitle = part?.title || "Parte";
+    if (item.primary === name && !(String(partNumber) === String(ignorePartNumber) && ignoreField === "primary")) {
+      rows.push({ week: week.label, part: partTitle, role: part?.type === "study" ? "Dirigente" : "Principal" });
+    }
+    if (item.helper === name && !(String(partNumber) === String(ignorePartNumber) && ignoreField === "helper")) {
+      rows.push({ week: week.label, part: partTitle, role: part?.type === "study" ? "Leitor" : "Ajudante" });
+    }
+  }
+  return rows;
+}
+
 function rebuildHistory() {
   const rows = [];
   for (const week of state.weeks) {
@@ -1131,6 +1163,11 @@ function addMonth() {
 
 function updateAssignment(target) {
   const { week, part, field } = target.dataset;
+  if (state.rules.noSamePersonSameWeek && target.value && weeklyAssignmentDetails(target.value, week, part, field).length) {
+    toast("Esta pessoa ja esta designada nesta semana.");
+    render();
+    return;
+  }
   const schedule = currentSchedule(week);
   if (part === "chairman") schedule.chairman = target.value;
   else {

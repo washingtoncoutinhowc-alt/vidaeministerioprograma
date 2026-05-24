@@ -100,10 +100,15 @@ button.soft { background: var(--surface-2); color: var(--text); }
 button.danger { background: var(--danger); }
 input, select, textarea { width: 100%; min-height: 38px; border: 1px solid var(--line); border-radius: var(--radius); padding: 8px 10px; background: var(--surface); color: var(--text); }
 select.used-month-select { border-color: var(--danger); color: var(--danger); font-weight: 800; background: #fff5f5; }
-option.used-month { color: var(--danger); font-weight: 800; }
+select.selected-male { border-color: var(--green); color: var(--green); font-weight: 800; background: #f2fbf7; }
+select.selected-female { border-color: var(--danger); color: var(--danger); font-weight: 800; background: #fff5f5; }
+option.used-month, option.gender-f { color: var(--danger); font-weight: 800; }
+option.gender-m { color: var(--green); font-weight: 800; }
+option.used-week { opacity: .7; }
 label { display: grid; gap: 6px; font-weight: 700; font-size: 13px; }
 .person-select-wrap { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px; align-items: center; }
 .used-month-info { min-height: 38px; padding: 8px 10px; background: #fff5f5; border: 1px solid var(--danger); color: var(--danger); }
+.used-month-info.male { background: #f2fbf7; border-color: var(--green); color: var(--green); }
 .rule-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); }
 .rule-row:last-child { border-bottom: 0; }
 .manual-rule-form { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; margin: 12px 0 16px; }
@@ -231,7 +236,8 @@ th { color: var(--muted); font-size: 12px; text-transform: uppercase; }
   .part-title span { font-size: 12px; }
   .part-row .person-select-wrap { grid-column: 2; display: block; }
   .part-row select { pointer-events: none; min-height: 28px; margin-top: 4px; padding: 0; border: 0; background: transparent; color: var(--text); font-weight: 800; appearance: none; }
-  .part-row select.used-month-select { color: var(--danger); background: transparent; }
+  .part-row select.used-month-select, .part-row select.selected-female { color: var(--danger); background: transparent; }
+  .part-row select.selected-male { color: var(--green); background: transparent; }
   .used-month-info { display: none; }
   .program-print-sheet .print-title h2 { font-size: 14px; }
   .program-print-sheet .print-week-image { height: 220px; }
