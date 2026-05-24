@@ -1,4 +1,4 @@
-﻿const STORE_KEY = "pvm-professional-state-v1";
+const STORE_KEY = "pvm-professional-state-v1";
 const API_STATE_URL = location.protocol === "file:" ? "http://127.0.0.1:4182/api/state" : "/api/state";
 const ADMIN_TOKEN_KEY = "pvm-admin-token";
 const ADMIN_MODE = new URLSearchParams(location.search).has("admin");
@@ -602,11 +602,11 @@ function normalizeManualRules(rules) {
   return [...byId.values()];
 }
 
-function saveState() {
+async function saveState() {
   rebuildHistory();
   localStorage.setItem(STORE_KEY, JSON.stringify(state));
-  saveStateToServer(true);
-  toast("Programacao salva.");
+  const savedOnline = await saveStateToServer(true);
+  toast(savedOnline ? "Programacao salva online." : "Programacao salva apenas neste navegador.");
   render();
 }
 
@@ -620,10 +620,13 @@ async function saveStateToServer(showError = false) {
       },
       body: JSON.stringify(state)
     });
-    if (!response.ok) throw new Error("save failed");
+    if (!response.ok) {
+      const detail = await response.text().catch(() => "");
+      throw new Error(detail || "save failed");
+    }
     return true;
-  } catch {
-    if (showError) toast("Nao consegui salvar para o celular. Abra pelo endereco com IP.");
+  } catch (error) {
+    if (showError) toast(`Nao consegui salvar online: ${error.message || "verifique as variaveis da Vercel"}`);
     return false;
   }
 }
