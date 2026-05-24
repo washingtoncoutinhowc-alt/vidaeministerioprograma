@@ -1,4 +1,4 @@
-const CACHE_NAME = "pvm-app-v14";
+const CACHE_NAME = "pvm-app-v15";
 const ASSETS = [
   "./",
   "./index.html",
@@ -27,10 +27,19 @@ self.addEventListener("activate", event => {
 
 self.addEventListener("fetch", event => {
   if (event.request.method !== "GET") return;
-  if (new URL(event.request.url).pathname.startsWith("/api/")) {
+  const url = new URL(event.request.url);
+  if (url.pathname.startsWith("/api/")) {
     event.respondWith(fetch(event.request));
     return;
   }
+
+  if (event.request.mode === "navigate") {
+    event.respondWith(
+      fetch(event.request).catch(() => caches.match("./index.html").then(cached => cached || caches.match("./")))
+    );
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then(cached => cached || fetch(event.request).then(response => {
       const copy = response.clone();

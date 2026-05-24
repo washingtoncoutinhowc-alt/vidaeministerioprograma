@@ -4,11 +4,11 @@
   "rewrites": [
     {
       "source": "/admin",
-      "destination": "/index.html?admin=1"
+      "destination": "/?admin=1"
     },
     {
-      "source": "/((?!api/).*)",
-      "destination": "/index.html"
+      "source": "/index.html",
+      "destination": "/"
     }
   ]
 }
