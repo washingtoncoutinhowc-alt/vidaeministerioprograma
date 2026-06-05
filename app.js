@@ -423,6 +423,7 @@ const defaultState = {
     ministrySisters: true,
     avoidSamePair: true,
     noSamePersonSameWeek: true,
+    ministrySameGenderPair: true,
     bibleReadingBrothers: true,
     lifeElders: true,
     fiveMinuteTalkBrothers: true
@@ -518,6 +519,22 @@ function formatWeekRange(from, to) {
   if (from.getMonth() === to.getMonth()) return `${from.getDate()}-${to.getDate()} de ${month.format(from)}`;
   const toDay = to.getDate() === 1 ? "1.º" : String(to.getDate());
   return `${from.getDate()} de ${month.format(from)}–${toDay} de ${month.format(to)}`;
+}
+
+function monthKey(isoDate = "") {
+  return isoDate ? isoDate.slice(0, 7) : "";
+}
+
+function monthOptions() {
+  const formatter = new Intl.DateTimeFormat("pt-BR", { month: "long", year: "numeric" });
+  const byMonth = new Map();
+  for (const week of state.weeks) {
+    const key = monthKey(week.id);
+    if (!key || byMonth.has(key)) continue;
+    const label = formatter.format(parseLocalDate(`${key}-01`));
+    byMonth.set(key, label.charAt(0).toUpperCase() + label.slice(1));
+  }
+  return [...byMonth.entries()].map(([value, label]) => ({ value, label }));
 }
 
 function clone(value) {
@@ -719,6 +736,7 @@ function legacyStudyHelper(weekId) {
 function renderWeek() {
   const week = currentWeek();
   const schedule = currentSchedule(week.id);
+  state.generationMonth ||= monthKey(week.id);
   view.innerHTML = `
     <div class="dashboard-grid">
       <div>
@@ -726,6 +744,7 @@ function renderWeek() {
           <div class="week-image variant-${week.imageVariant}" ${imageStyle(week.image)}><div><p class="eyebrow">Apostila semanal</p><h2>${esc(week.label)}</h2><p>${esc(week.reading)}</p></div></div>
           <div class="week-body"><div class="toolbar no-print">
             <button class="primary" data-action="generate-current">Gerar esta semana</button>
+            <button class="ghost" data-action="clear-current-week">Limpar semana</button>
             <button class="ghost" data-action="print-week">Exportar PDF</button>
             <button class="ghost" data-action="open-assignments">S-89 desta semana</button>
           </div></div>
@@ -864,7 +883,7 @@ function renderPartRow(week, schedule, part) {
   const helperLabel = part.type === "study" ? "Leitor" : "Ajudante";
   return `<div class="part-row"><div class="part-number">${part.n}</div><div class="part-title"><strong>${esc(part.title)}</strong><span>${esc(part.minutes)}</span></div>
     ${assignmentSelect(primaryLabel, `part-${part.n}-primary`, assignment.primary || "", primaryPeople, week.id, part.n, "primary")}
-    ${part.type === "ministry" || part.type === "study" ? assignmentSelect(helperLabel, `part-${part.n}-helper`, assignment.helper || "", eligible(helperType), week.id, part.n, "helper") : "<span></span>"}
+    ${part.type === "ministry" || part.type === "study" ? assignmentSelect(helperLabel, `part-${part.n}-helper`, assignment.helper || "", part.type === "ministry" ? eligibleMinistryHelper(assignment.primary) : eligible(helperType), week.id, part.n, "helper") : "<span></span>"}
   </div>`;
 }
 
@@ -895,15 +914,26 @@ function personSelect(id, selected, people, weekId, partNumber, field) {
 }
 
 function renderPrograms() {
-  view.innerHTML = `<section class="panel"><div class="toolbar">
-    <button class="primary" data-action="generate-month">Gerar todas</button>
+  state.generationMonth ||= monthKey(state.activeWeekId || state.weeks[0]?.id);
+  view.innerHTML = `<section class="panel"><div class="month-generate-bar">
+    <label>Mes para gerar<select id="generationMonthSelect">${monthOptions().map(option => `<option value="${esc(option.value)}" ${option.value === state.generationMonth ? "selected" : ""}>${esc(option.label)}</option>`).join("")}</select></label>
+    <div class="toolbar">
+    <button class="primary" data-action="generate-selected-month">Gerar mes escolhido</button>
     <button class="ghost" data-action="add-month">Adicionar mes</button>
     <button class="ghost" data-action="print-week">Exportar PDF</button>
-  </div></section><div class="week-list">${state.weeks.map(week => `
-    <button class="week-card variant-${week.imageVariant}" data-week-card="${week.id}">
+  </div></div></section><div class="week-list">${state.weeks.map(week => {
+    const events = specialEventsForWeek(week);
+    const hasSpecialEvent = events.length > 0;
+    return `
+    <button class="week-card variant-${week.imageVariant} ${hasSpecialEvent ? "special-week-card" : ""}" data-week-card="${week.id}">
       <img class="week-thumb" src="${esc(week.image || weekImage(week.imageVariant || 0))}" alt="">
-      <div class="week-card-content"><span class="badge">${state.schedules[week.id] ? "Gerada" : "Pendente"}</span><h3>${esc(week.label)}</h3><p>${esc(week.reading)}</p></div>
-    </button>`).join("")}</div>`;
+      <div class="week-card-content">
+        <span class="badge ${hasSpecialEvent ? "event-badge" : ""}">${hasSpecialEvent ? esc(events.map(event => event.label).join(" / ")) : state.schedules[week.id] ? "Gerada" : "Pendente"}</span>
+        <h3>${esc(week.label)}</h3>
+        <p>${esc(week.reading)}</p>
+      </div>
+    </button>`;
+  }).join("")}</div>`;
 }
 
 function renderPrintProgram() {
@@ -992,7 +1022,7 @@ function renderAssignments() {
   }
   view.innerHTML = `<section class="panel no-print"><div class="toolbar">
     <button class="primary" data-action="print-assignments">Exportar S-89 em PDF</button>
-    <button class="ghost" data-action="generate-month">Gerar designacoes</button>
+    <button class="ghost" data-action="generate-selected-month">Gerar mes escolhido</button>
   </div></section><div class="assignment-grid">${cards.length ? cards.join("") : emptyState("Gere a programacao para criar as designacoes individuais.")}</div>`;
 }
 
@@ -1062,6 +1092,7 @@ function renderRules() {
     ministrySisters: "Partes do ministerio com publicadores batizados",
     avoidSamePair: "Evitar repetir a mesma dupla",
     noSamePersonSameWeek: "Nao repetir a mesma pessoa na semana",
+    ministrySameGenderPair: "Ministerio sem misturar irmaos com irmas",
     bibleReadingBrothers: "Leitura da Biblia com publicadores masculinos",
     lifeElders: "Vida crista prioriza anciaos e libera servos no rodizio",
     fiveMinuteTalkBrothers: "Discurso de 5 minutos somente com publicadores masculinos"
@@ -1106,7 +1137,7 @@ function specialEventInputs(key, label) {
 function generateScheduleForWeek(week) {
   const used = new Set();
   const schedule = { chairman: "", closingPrayer: "", parts: {} };
-  const chairman = pickPerson(eligible("chairman"), used);
+  const chairman = pickPerson(eligible("chairman"), used, "Presidente");
   if (chairman) { schedule.chairman = chairman.name; used.add(chairman.name); }
   for (const part of week.parts) {
     const primaryType = part.type === "study" ? "studyConductor" : part.type;
@@ -1119,7 +1150,7 @@ function generateScheduleForWeek(week) {
     if (primary) used.add(primary.name);
     const assignment = { primary: primary?.name || "" };
     if (part.type === "ministry") {
-      const helper = pickPerson(eligible("ministry"), used);
+      const helper = pickPerson(eligibleMinistryHelper(primary?.name), used, "Ajudante");
       if (helper) used.add(helper.name);
       assignment.helper = helper?.name || "";
     }
@@ -1130,10 +1161,38 @@ function generateScheduleForWeek(week) {
     }
     schedule.parts[part.n] = assignment;
   }
-  const closingPrayer = pickPerson(eligibleClosingPrayer(), used);
+  const closingPrayer = pickPerson(eligibleClosingPrayer(), used, "Oracao");
   if (closingPrayer) schedule.closingPrayer = closingPrayer.name;
   state.schedules[week.id] = schedule;
   rebuildHistory();
+}
+
+function generateScheduleForSingleWeek(week) {
+  delete state.schedules[week.id];
+  rebuildHistory();
+  generateScheduleForWeek(week);
+}
+
+function generateSelectedMonth(month = state.generationMonth || monthKey(state.activeWeekId || state.weeks[0]?.id)) {
+  const weeks = state.weeks.filter(week => monthKey(week.id) === month);
+  if (!weeks.length) {
+    toast("Escolha um mes com semanas cadastradas.");
+    return;
+  }
+  weeks.forEach(week => delete state.schedules[week.id]);
+  rebuildHistory();
+  weeks.forEach(generateScheduleForWeek);
+  state.generationMonth = month;
+  state.activeWeekId = weeks[0].id;
+}
+
+function clearCurrentWeek() {
+  const week = currentWeek();
+  if (!week) return;
+  delete state.schedules[week.id];
+  rebuildHistory();
+  render();
+  toast("Semana limpa.");
 }
 
 function eligible(type) {
@@ -1150,6 +1209,14 @@ function eligible(type) {
     if (type === "studyReader") return person.gender === "M" && person.role === "Publicador batizado";
     return true;
   });
+}
+
+function eligibleMinistryHelper(primaryName = "") {
+  const people = eligible("ministry");
+  if (!state.rules.ministrySameGenderPair || !primaryName) return people;
+  const primary = state.people.find(person => person.name === primaryName);
+  if (!primary) return people;
+  return people.filter(person => person.gender === primary.gender);
 }
 
 function isFiveMinuteTalk(part) {
@@ -1174,12 +1241,22 @@ function eligibleLifePart(weekId) {
 }
 
 function activePeople() { return state.people.filter(person => !person.blocked); }
-function pickPerson(people, used) {
-  const sorted = [...people].sort((a, b) => assignmentCount(a.name) - assignmentCount(b.name) || a.name.localeCompare(b.name));
+function pickPerson(people, used, role = "") {
+  const sorted = [...people].sort((a, b) =>
+    assignmentCount(a.name, role) - assignmentCount(b.name, role) ||
+    lastAssignmentOrder(a.name, role) - lastAssignmentOrder(b.name, role) ||
+    a.name.localeCompare(b.name)
+  );
   return sorted.find(person => !used.has(person.name)) || sorted[0];
 }
-function assignmentCount(name) { return state.history.filter(item => item.name === name).length; }
+function assignmentCount(name, role = "") {
+  return state.history.filter(item => item.name === name && (!role || item.role === role)).length;
+}
 function lastAssignment(name) { return [...state.history].reverse().find(item => item.name === name)?.week || ""; }
+function lastAssignmentOrder(name, role = "") {
+  const index = state.history.findLastIndex(item => item.name === name && (!role || item.role === role));
+  return index === -1 ? -1 : index;
+}
 
 function monthlyAssignmentCount(name, weekId) {
   return monthlyAssignmentDetails(name, weekId).length;
@@ -1268,9 +1345,24 @@ function updateAssignment(target) {
   else {
     schedule.parts[part] ||= {};
     schedule.parts[part][field] = target.value;
+    enforceMinistryPairRule(week, part, field);
   }
   rebuildHistory();
   render();
+}
+
+function enforceMinistryPairRule(weekId, partNumber, changedField = "") {
+  if (!state.rules.ministrySameGenderPair) return;
+  const week = state.weeks.find(item => item.id === weekId);
+  const part = week?.parts.find(item => String(item.n) === String(partNumber));
+  if (part?.type !== "ministry") return;
+  const assignment = state.schedules[weekId]?.parts?.[partNumber];
+  if (!assignment?.primary || !assignment?.helper) return;
+  const primary = state.people.find(person => person.name === assignment.primary);
+  const helper = state.people.find(person => person.name === assignment.helper);
+  if (!primary || !helper || primary.gender === helper.gender) return;
+  assignment.helper = "";
+  toast(changedField === "helper" ? "Escolha uma pessoa do mesmo sexo para esta parte." : "Ajudante removido para nao misturar irmao com irma.");
 }
 
 function closingPrayerName(schedule, week = currentWeek()) {
@@ -1493,11 +1585,13 @@ document.addEventListener("click", event => {
   if (!CAN_EDIT) return;
   const weekCard = event.target.closest("[data-week-card]");
   if (weekCard) { state.activeWeekId = weekCard.dataset.weekCard; setView("week"); }
-  if (action === "generate-current") { generateScheduleForWeek(currentWeek()); render(); }
-  if (action === "generate-month") { state.weeks.forEach(generateScheduleForWeek); render(); }
+  if (action === "generate-current") { generateScheduleForSingleWeek(currentWeek()); render(); }
+  if (action === "clear-current-week") clearCurrentWeek();
+  if (action === "generate-selected-month") { generateSelectedMonth(); render(); }
+  if (action === "generate-month") { generateSelectedMonth(monthKey(state.activeWeekId || state.weeks[0]?.id)); render(); }
   if (action === "generate-print-week") {
     const week = state.weeks.find(item => item.id === state.printWeekId) || currentWeek();
-    generateScheduleForWeek(week);
+    generateScheduleForSingleWeek(week);
     render();
   }
   if (action === "print-week" || action === "print-assignments") window.print();
@@ -1536,6 +1630,7 @@ document.addEventListener("click", event => {
 document.addEventListener("change", event => {
   if (event.target.id === "viewerWeekSelect") { state.viewerWeekId = event.target.value; render(); return; }
   if (!CAN_EDIT) return;
+  if (event.target.id === "generationMonthSelect") { state.generationMonth = event.target.value; render(); return; }
   if (event.target.closest("#personForm") && (event.target.name === "role" || event.target.name === "gender")) {
     applyRoleCapabilitiesToForm(event.target.closest("#personForm"));
     return;
@@ -1559,7 +1654,12 @@ document.addEventListener("input", event => {
 });
 
 document.getElementById("saveButton").addEventListener("click", () => { if (CAN_EDIT) saveState(); });
-document.getElementById("generateButton").addEventListener("click", () => { if (CAN_EDIT) { state.weeks.forEach(generateScheduleForWeek); render(); } });
+document.getElementById("generateButton").addEventListener("click", () => {
+  if (CAN_EDIT) {
+    generateSelectedMonth(monthKey(state.activeWeekId || state.weeks[0]?.id));
+    render();
+  }
+});
 document.getElementById("menuButton").addEventListener("click", () => document.body.classList.toggle("menu-open"));
 
 if ("serviceWorker" in navigator) {

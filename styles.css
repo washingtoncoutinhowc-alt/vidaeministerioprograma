@@ -172,17 +172,22 @@ label { display: grid; gap: 6px; font-weight: 700; font-size: 13px; }
 .week-card.variant-2 { border-left-color: var(--wine); }
 .week-card.variant-3 { border-left-color: var(--ink-blue); }
 .week-card.variant-4 { border-left-color: var(--green); }
+.week-card.special-week-card { border-left-color: #d63b3b; background: linear-gradient(90deg, rgba(214, 59, 59, .10), rgba(255,255,255,.96) 34%); }
+.week-card.special-week-card .week-card-content h3 { color: #c92f2f; font-weight: 650; }
+.week-card.special-week-card .week-card-content p { color: #8d2d2d; }
 .week-card:hover { transform: translateY(-1px); box-shadow: 0 24px 52px rgba(45, 69, 96, .18); }
 .week-thumb { width: 176px; aspect-ratio: 1.18 / 1; object-fit: cover; border-radius: 8px; box-shadow: 0 12px 30px rgba(36, 49, 61, .18); }
 .week-card-content { padding: 4px 0; }
 .week-card-content h3 { margin: 8px 0 6px; color: #466c9a; font-size: clamp(30px, 4vw, 46px); font-weight: 500; line-height: 1.06; }
 .week-card-content p { margin: 0; color: var(--muted); font-weight: 700; }
 .badge { display: inline-flex; align-items: center; min-height: 24px; padding: 2px 9px; border-radius: 999px; background: #e9f5f1; color: var(--green); font-size: 12px; font-weight: 800; }
+.badge.event-badge { background: #ffe9e9; color: #b32828; }
 .table-wrap { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; min-width: 720px; }
 th, td { padding: 10px; border-bottom: 1px solid var(--line); text-align: left; }
 th { color: var(--muted); font-size: 12px; text-transform: uppercase; }
 .form-grid, .settings-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.month-generate-bar { display: grid; grid-template-columns: minmax(240px, 1fr) auto; gap: 12px; align-items: end; }
 .assignment-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
 .assignment-card { padding: 18px; }
 .assignment-card header { padding-bottom: 12px; border-bottom: 2px solid var(--text); text-align: center; }
@@ -201,7 +206,7 @@ th { color: var(--muted); font-size: 12px; text-transform: uppercase; }
   .mobile-only { display: inline-grid; place-items: center; }
   .view { width: 100%; padding: 16px; }
   .topbar { padding: 12px 16px; }
-  .dashboard-grid, .program-head, .settings-grid, .special-settings, .special-setting, .capability-editor { grid-template-columns: 1fr; }
+  .dashboard-grid, .program-head, .settings-grid, .special-settings, .special-setting, .capability-editor, .month-generate-bar { grid-template-columns: 1fr; }
   .viewer-meta { grid-template-columns: 1fr; }
   .admin-login-panel { grid-template-columns: 1fr; }
   .viewer-part { grid-template-columns: 36px minmax(0, 1fr); align-items: start; }
