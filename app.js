@@ -1022,21 +1022,34 @@ function printAssignmentNames(part, assignment) {
 }
 
 function renderAssignments() {
-  const cards = [];
-  for (const week of state.weeks) {
+  state.assignmentMonth ||= monthKey(state.activeWeekId || state.weeks[0]?.id);
+  const weeksInMonth = state.weeks.filter(week => monthKey(week.id) === state.assignmentMonth);
+  if (state.assignmentWeekId && !weeksInMonth.some(week => week.id === state.assignmentWeekId)) {
+    state.assignmentWeekId = "";
+  }
+  const selectedWeeks = state.assignmentWeekId
+    ? weeksInMonth.filter(week => week.id === state.assignmentWeekId)
+    : weeksInMonth;
+  const weekGroups = selectedWeeks.map(week => {
     const schedule = state.schedules[week.id];
-    if (!schedule) continue;
+    if (!schedule) return "";
+    const cards = [];
     for (const part of week.parts) {
       const item = schedule.parts[part.n] || {};
       if (!item.primary) continue;
       cards.push(renderAssignmentCard(week, part, item));
       if (item.helper && part.type === "ministry") cards.push(renderAssignmentCard(week, part, { primary: item.helper, helper: item.primary, helperLabel: "Companheiro" }));
     }
-  }
-  view.innerHTML = `<section class="panel no-print"><div class="toolbar">
-    <button class="primary" data-action="print-assignments">Exportar S-89 em PDF</button>
-    <button class="ghost" data-action="generate-selected-month">Gerar mes escolhido</button>
-  </div></section><div class="assignment-grid">${cards.length ? cards.join("") : emptyState("Gere a programacao para criar as designacoes individuais.")}</div>`;
+    return cards.length ? `<section class="assignment-week-group"><h2>${esc(week.label)} | ${esc(week.reading)}</h2><div class="assignment-grid">${cards.join("")}</div></section>` : "";
+  }).filter(Boolean);
+  view.innerHTML = `<section class="panel no-print"><div class="assignment-filter-grid">
+    <label>Mes<select id="assignmentMonthSelect">${monthOptions().map(option => `<option value="${esc(option.value)}" ${option.value === state.assignmentMonth ? "selected" : ""}>${esc(option.label)}</option>`).join("")}</select></label>
+    <label>Semana<select id="assignmentWeekSelect"><option value="">Todas as semanas do mes</option>${weeksInMonth.map(week => `<option value="${esc(week.id)}" ${week.id === state.assignmentWeekId ? "selected" : ""}>${esc(week.label)} - ${esc(week.reading)}</option>`).join("")}</select></label>
+    <div class="toolbar">
+      <button class="primary" data-action="print-assignments">Exportar S-89 em PDF</button>
+      <button class="ghost" data-action="generate-selected-month">Gerar mes escolhido</button>
+    </div>
+  </div></section>${weekGroups.length ? weekGroups.join("") : emptyState("Gere a programacao deste periodo para criar as designacoes individuais.")}`;
 }
 
 function renderAssignmentCard(week, part, item) {
@@ -1651,6 +1664,8 @@ document.addEventListener("change", event => {
   if (event.target.id === "viewerWeekSelect") { state.viewerWeekId = event.target.value; render(); return; }
   if (!CAN_EDIT) return;
   if (event.target.id === "generationMonthSelect") { state.generationMonth = event.target.value; render(); return; }
+  if (event.target.id === "assignmentMonthSelect") { state.assignmentMonth = event.target.value; state.assignmentWeekId = ""; render(); return; }
+  if (event.target.id === "assignmentWeekSelect") { state.assignmentWeekId = event.target.value; render(); return; }
   if (event.target.closest("#personForm") && (event.target.name === "role" || event.target.name === "gender")) {
     applyRoleCapabilitiesToForm(event.target.closest("#personForm"));
     return;
