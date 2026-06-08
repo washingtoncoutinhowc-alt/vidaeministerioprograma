@@ -724,6 +724,7 @@ function currentSchedule(weekId = state.activeWeekId) {
   if (!("closingPrayer" in state.schedules[weekId])) {
     state.schedules[weekId].closingPrayer = legacyStudyHelper(weekId);
   }
+  syncClosingPrayerWithStudyReader(weekId);
   return state.schedules[weekId];
 }
 
@@ -731,6 +732,18 @@ function legacyStudyHelper(weekId) {
   const week = state.weeks.find(item => item.id === weekId);
   const studyPart = week?.parts.find(part => part.type === "study");
   return studyPart ? state.schedules[weekId]?.parts?.[studyPart.n]?.helper || "" : "";
+}
+
+function studyReaderName(weekId, schedule = state.schedules[weekId]) {
+  const week = state.weeks.find(item => item.id === weekId);
+  const studyPart = week?.parts.find(part => part.type === "study");
+  return studyPart ? schedule?.parts?.[studyPart.n]?.helper || "" : "";
+}
+
+function syncClosingPrayerWithStudyReader(weekId) {
+  const schedule = state.schedules[weekId];
+  if (!schedule) return;
+  schedule.closingPrayer = studyReaderName(weekId, schedule);
 }
 
 function renderWeek() {
@@ -1161,8 +1174,7 @@ function generateScheduleForWeek(week) {
     }
     schedule.parts[part.n] = assignment;
   }
-  const closingPrayer = pickPerson(eligibleClosingPrayer(), used, "Oracao");
-  if (closingPrayer) schedule.closingPrayer = closingPrayer.name;
+  schedule.closingPrayer = studyReaderName(week.id, schedule);
   state.schedules[week.id] = schedule;
   rebuildHistory();
 }
@@ -1312,6 +1324,7 @@ function rebuildHistory() {
   for (const week of state.weeks) {
     const schedule = state.schedules[week.id];
     if (!schedule) continue;
+    syncClosingPrayerWithStudyReader(week.id);
     if (schedule.chairman) rows.push({ week: week.label, part: "Presidente e oracao inicial", role: "Presidente", name: schedule.chairman });
     if (schedule.closingPrayer) rows.push({ week: week.label, part: "Oracao final", role: "Oracao", name: schedule.closingPrayer });
     for (const part of week.parts) {
@@ -1333,18 +1346,26 @@ function addMonth() {
 
 function updateAssignment(target) {
   const { week, part, field } = target.dataset;
-  if (state.rules.noSamePersonSameWeek && target.value && weeklyAssignmentDetails(target.value, week, part, field).length) {
+  if (part !== "closingPrayer" && state.rules.noSamePersonSameWeek && target.value && weeklyAssignmentDetails(target.value, week, part, field).length) {
     toast("Esta pessoa ja esta designada nesta semana.");
     render();
     return;
   }
   const schedule = currentSchedule(week);
   if (part === "chairman") schedule.chairman = target.value;
-  else if (part === "closingPrayer") schedule.closingPrayer = target.value;
+  else if (part === "closingPrayer") {
+    const studyPart = state.weeks.find(item => item.id === week)?.parts.find(item => item.type === "study");
+    if (studyPart) {
+      schedule.parts[studyPart.n] ||= {};
+      schedule.parts[studyPart.n].helper = target.value;
+    }
+    syncClosingPrayerWithStudyReader(week);
+  }
   else {
     schedule.parts[part] ||= {};
     schedule.parts[part][field] = target.value;
     enforceMinistryPairRule(week, part, field);
+    syncClosingPrayerWithStudyReader(week);
   }
   rebuildHistory();
   render();
@@ -1365,7 +1386,7 @@ function enforceMinistryPairRule(weekId, partNumber, changedField = "") {
 }
 
 function closingPrayerName(schedule, week = currentWeek()) {
-  return schedule.closingPrayer || "A definir";
+  return studyReaderName(week.id, schedule) || schedule.closingPrayer || "A definir";
 }
 function nameOrBlank(value) { return value ? esc(value) : "A definir"; }
 function emptyState(text) { return `<section class="panel"><p class="muted">${text}</p></section>`; }
