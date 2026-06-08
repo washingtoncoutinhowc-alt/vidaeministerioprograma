@@ -1094,7 +1094,7 @@ function renderRules() {
     noSamePersonSameWeek: "Nao repetir a mesma pessoa na semana",
     ministrySameGenderPair: "Ministerio sem misturar irmaos com irmas",
     bibleReadingBrothers: "Leitura da Biblia com publicadores masculinos",
-    lifeElders: "Vida crista prioriza anciaos e libera servos no rodizio",
+    lifeElders: "Nossa Vida Crista com anciaos e servos ministeriais",
     fiveMinuteTalkBrothers: "Discurso de 5 minutos somente com publicadores masculinos"
   };
   view.innerHTML = `<section class="panel"><h2>Regras automáticas</h2>${Object.entries(labels).map(([key, label]) => `<div class="rule-row"><strong>${label}</strong><button class="${state.rules[key] ? "primary" : "ghost"}" data-rule="${key}">${state.rules[key] ? "Ligada" : "Desligada"}</button></div>`).join("")}</section>
@@ -1233,11 +1233,10 @@ function eligibleClosingPrayer() {
 
 function eligibleLifePart(weekId) {
   const people = activePeople();
-  const elders = people.filter(person => person.role === "Anciao");
-  if (!state.rules.lifeElders) return eligible("life");
-  const availableElders = elders.filter(person => monthlyAssignmentCount(person.name, weekId) === 0);
-  if (availableElders.length) return availableElders;
-  return people.filter(person => person.role === "Anciao" || person.role === "Servo ministerial");
+  const lifeBrothers = people.filter(person => person.role === "Anciao" || person.role === "Servo ministerial");
+  if (!state.rules.lifeElders) return lifeBrothers;
+  const availableBrothers = lifeBrothers.filter(person => monthlyAssignmentCount(person.name, weekId) === 0);
+  return availableBrothers.length ? availableBrothers : lifeBrothers;
 }
 
 function activePeople() { return state.people.filter(person => !person.blocked); }
