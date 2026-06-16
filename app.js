@@ -585,8 +585,13 @@ function normalizeWeeks(weeks) {
       ...week,
       label: defaultWeek?.label || week.label
     });
+    const partsByNumber = new Map((corrected.parts || []).map(part => [Number(part.n), part]));
+    for (const part of week.parts || []) {
+      if (part.customManual) partsByNumber.set(Number(part.n), part);
+    }
     return {
       ...corrected,
+      parts: [...partsByNumber.values()].sort((a, b) => Number(a.n) - Number(b.n)),
       imageVariant: Number.isInteger(corrected.imageVariant) ? corrected.imageVariant : index % 5,
       image: corrected.image || weekImage(index)
     };
