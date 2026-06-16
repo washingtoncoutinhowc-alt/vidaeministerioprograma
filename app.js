@@ -1290,10 +1290,7 @@ function eligibleClosingPrayer() {
 
 function eligibleLifePart(weekId) {
   const people = activePeople();
-  const lifeBrothers = people.filter(person => person.role === "Anciao" || person.role === "Servo ministerial");
-  if (!state.rules.lifeElders) return lifeBrothers;
-  const availableBrothers = lifeBrothers.filter(person => monthlyAssignmentCount(person.name, weekId) === 0);
-  return availableBrothers.length ? availableBrothers : lifeBrothers;
+  return people.filter(person => person.role === "Anciao" || person.role === "Servo ministerial");
 }
 
 function activePeople() { return state.people.filter(person => !person.blocked); }
