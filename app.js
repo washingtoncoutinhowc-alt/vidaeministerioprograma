@@ -777,8 +777,35 @@ function renderWeek() {
         <section class="panel"><h2>Oracao final</h2>
           <label>Nome${personSelect("closingPrayer", schedule.closingPrayer || "", eligibleClosingPrayer(), week.id, "closingPrayer")}</label>
         </section>
+        ${renderManualPartPanel(week)}
       </aside>
     </div>`;
+}
+
+function renderManualPartPanel(currentWeekData) {
+  const selectedWeekId = state.manualPartWeekId && state.weeks.some(week => week.id === state.manualPartWeekId)
+    ? state.manualPartWeekId
+    : currentWeekData.id;
+  state.manualPartWeekId = selectedWeekId;
+  const selectedWeek = state.weeks.find(week => week.id === selectedWeekId) || currentWeekData;
+  const manualParts = selectedWeek.parts.filter(part => part.customManual);
+  return `<section class="panel manual-part-panel no-print"><h2>Criar parte</h2>
+    <div class="manual-part-form">
+      <label>Semana<select id="manualPartWeekSelect">${state.weeks.map(week => `<option value="${esc(week.id)}" ${week.id === selectedWeekId ? "selected" : ""}>${esc(week.label)} - ${esc(week.reading)}</option>`).join("")}</select></label>
+      <div class="manual-part-row">
+        <label>Numero<input id="manualPartNumber" type="number" min="1" max="30" placeholder="8"></label>
+        <label>Tempo<input id="manualPartMinutes" placeholder="5 min"></label>
+      </div>
+      <label>Secao<select id="manualPartSection">
+        <option value="treasures">Tesouros da Palavra de Deus</option>
+        <option value="ministry">Faca seu melhor no ministerio</option>
+        <option value="life">Nossa Vida Crista</option>
+      </select></label>
+      <label>Nome da parte<input id="manualPartTitle" placeholder="Digite o titulo da parte"></label>
+      <button class="primary" data-action="add-manual-part">Adicionar parte</button>
+    </div>
+    ${manualParts.length ? `<div class="manual-part-list">${manualParts.map(part => `<div class="manual-part-item"><span><strong>${part.n}.</strong> ${esc(part.title)}</span><button class="ghost" data-remove-manual-part="${esc(selectedWeek.id)}:${part.n}">Remover</button></div>`).join("")}</div>` : `<p class="muted">Nenhuma parte manual nesta semana.</p>`}
+  </section>`;
 }
 
 function renderProgramSheet(week, schedule) {
@@ -1357,6 +1384,61 @@ function addMonth() {
   render();
 }
 
+function partTypeForSection(section) {
+  return section === "treasures" ? "treasures" : section === "ministry" ? "ministry" : "life";
+}
+
+function addManualPart() {
+  const weekId = document.getElementById("manualPartWeekSelect")?.value || state.activeWeekId;
+  const week = state.weeks.find(item => item.id === weekId);
+  const number = Number(document.getElementById("manualPartNumber")?.value);
+  const title = document.getElementById("manualPartTitle")?.value.trim();
+  const minutes = document.getElementById("manualPartMinutes")?.value.trim() || "5 min";
+  const section = document.getElementById("manualPartSection")?.value || "life";
+  if (!week) {
+    toast("Escolha uma semana valida.");
+    return;
+  }
+  if (!Number.isInteger(number) || number < 1) {
+    toast("Digite o numero da parte.");
+    return;
+  }
+  if (!title) {
+    toast("Digite o nome da parte.");
+    return;
+  }
+  const existing = week.parts.find(part => Number(part.n) === number);
+  const manualPart = {
+    n: number,
+    section,
+    title,
+    minutes,
+    type: partTypeForSection(section),
+    customManual: true
+  };
+  if (existing) Object.assign(existing, manualPart);
+  else week.parts.push(manualPart);
+  week.parts.sort((a, b) => Number(a.n) - Number(b.n));
+  currentSchedule(week.id).parts[number] ||= { primary: "" };
+  state.activeWeekId = week.id;
+  state.manualPartWeekId = week.id;
+  rebuildHistory();
+  render();
+  toast(existing ? "Parte manual atualizada." : "Parte manual adicionada.");
+}
+
+function removeManualPart(value) {
+  const [weekId, partNumber] = String(value).split(":");
+  const week = state.weeks.find(item => item.id === weekId);
+  if (!week) return;
+  week.parts = week.parts.filter(part => !(part.customManual && String(part.n) === String(partNumber)));
+  if (state.schedules[weekId]?.parts) delete state.schedules[weekId].parts[partNumber];
+  state.manualPartWeekId = weekId;
+  rebuildHistory();
+  render();
+  toast("Parte manual removida.");
+}
+
 function updateAssignment(target) {
   const { week, part, field } = target.dataset;
   if (part !== "closingPrayer" && state.rules.noSamePersonSameWeek && target.value && weeklyAssignmentDetails(target.value, week, part, field).length) {
@@ -1633,6 +1715,7 @@ document.addEventListener("click", event => {
   if (action === "add-month") addMonth();
   if (action === "new-person") openPersonForm();
   if (action === "add-manual-rule") addManualRule();
+  if (action === "add-manual-part") addManualPart();
   if (action === "export-backup") exportBackup();
   if (action === "reset-data") resetData();
   const togglePerson = event.target.closest("[data-toggle-person]");
@@ -1658,6 +1741,8 @@ document.addEventListener("click", event => {
     state.manualRules = state.manualRules.filter(item => item.id !== deleteManualRule.dataset.deleteManualRule);
     render();
   }
+  const removeManualPartButton = event.target.closest("[data-remove-manual-part]");
+  if (removeManualPartButton) removeManualPart(removeManualPartButton.dataset.removeManualPart);
 });
 
 document.addEventListener("change", event => {
@@ -1666,6 +1751,7 @@ document.addEventListener("change", event => {
   if (event.target.id === "generationMonthSelect") { state.generationMonth = event.target.value; render(); return; }
   if (event.target.id === "assignmentMonthSelect") { state.assignmentMonth = event.target.value; state.assignmentWeekId = ""; render(); return; }
   if (event.target.id === "assignmentWeekSelect") { state.assignmentWeekId = event.target.value; render(); return; }
+  if (event.target.id === "manualPartWeekSelect") { state.manualPartWeekId = event.target.value; render(); return; }
   if (event.target.closest("#personForm") && (event.target.name === "role" || event.target.name === "gender")) {
     applyRoleCapabilitiesToForm(event.target.closest("#personForm"));
     return;
