@@ -1066,6 +1066,9 @@ function renderAssignments() {
     const schedule = state.schedules[week.id];
     if (!schedule) return "";
     const cards = [];
+    if (schedule.chairman) {
+      cards.push(renderAssignmentCard(week, { n: "", title: "Presidente da reuniao", minutes: "Reuniao completa" }, { primary: schedule.chairman }));
+    }
     for (const part of week.parts) {
       const item = schedule.parts[part.n] || {};
       if (!item.primary) continue;
@@ -1085,9 +1088,10 @@ function renderAssignments() {
 }
 
 function renderAssignmentCard(week, part, item) {
+  const partLabel = part.n ? `${part.n}. ${esc(part.title)}` : esc(part.title);
   return `<article class="assignment-card"><header><h2>DESIGNACAO PARA A REUNIAO</h2><p>NOSSA VIDA E MINISTERIO CRISTAO</p></header>
     <dl><dt>Nome</dt><dd>${esc(item.primary)}</dd>${item.helper ? `<dt>${item.helperLabel || "Ajudante"}</dt><dd>${esc(item.helper)}</dd>` : ""}
-    <dt>Data</dt><dd>${esc(week.label)}</dd><dt>Parte</dt><dd>${part.n}. ${esc(part.title)}</dd><dt>Tempo</dt><dd>${esc(part.minutes)}</dd><dt>Local</dt><dd>Salao principal</dd></dl>
+    <dt>Data</dt><dd>${esc(week.label)}</dd><dt>Parte</dt><dd>${partLabel}</dd><dt>Tempo</dt><dd>${esc(part.minutes)}</dd><dt>Local</dt><dd>Salao principal</dd></dl>
     <p class="muted">Use a fonte de materia indicada na Apostila da Reuniao Vida e Ministerio.</p></article>`;
 }
 
