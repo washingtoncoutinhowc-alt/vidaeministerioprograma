@@ -917,7 +917,8 @@ function renderSection(week, schedule, section, title) {
 
 function renderPartRow(week, schedule, part) {
   const assignment = schedule.parts[part.n] || {};
-  const primaryType = part.type === "study" ? "studyConductor" : part.type;
+  const singleMinistry = isSinglePersonMinistryPart(part);
+  const primaryType = part.type === "study" ? "studyConductor" : singleMinistry ? "ministrySingle" : part.type;
   const helperType = part.type === "study" ? "studyReader" : "ministry";
   const primaryPeople = state.rules.fiveMinuteTalkBrothers && isFiveMinuteTalk(part)
     ? eligibleFiveMinuteTalk()
@@ -928,7 +929,7 @@ function renderPartRow(week, schedule, part) {
   const helperLabel = part.type === "study" ? "Leitor" : "Ajudante";
   return `<div class="part-row"><div class="part-number">${part.n}</div><div class="part-title"><strong>${esc(part.title)}</strong><span>${esc(part.minutes)}</span></div>
     ${assignmentSelect(primaryLabel, `part-${part.n}-primary`, assignment.primary || "", primaryPeople, week.id, part.n, "primary")}
-    ${part.type === "ministry" || part.type === "study" ? assignmentSelect(helperLabel, `part-${part.n}-helper`, assignment.helper || "", part.type === "ministry" ? eligibleMinistryHelper(assignment.primary) : eligible(helperType), week.id, part.n, "helper") : "<span></span>"}
+    ${(part.type === "ministry" && !singleMinistry) || part.type === "study" ? assignmentSelect(helperLabel, `part-${part.n}-helper`, assignment.helper || "", part.type === "ministry" ? eligibleMinistryHelper(assignment.primary) : eligible(helperType), week.id, part.n, "helper") : "<span></span>"}
   </div>`;
 }
 
@@ -1049,7 +1050,7 @@ function printAssignmentNames(part, assignment) {
     return names.length ? names.join("<br>") : "A definir";
   }
   if (assignment.primary) names.push(esc(assignment.primary));
-  if (part.type === "ministry" && assignment.helper) names.push(esc(assignment.helper));
+  if (part.type === "ministry" && !isSinglePersonMinistryPart(part) && assignment.helper) names.push(esc(assignment.helper));
   return names.length ? names.join("<br>") : "A definir";
 }
 
@@ -1073,7 +1074,7 @@ function renderAssignments() {
       const item = schedule.parts[part.n] || {};
       if (!item.primary) continue;
       cards.push(renderAssignmentCard(week, part, item));
-      if (item.helper && part.type === "ministry") cards.push(renderAssignmentCard(week, part, { primary: item.helper, helper: item.primary, helperLabel: "Companheiro" }));
+      if (item.helper && part.type === "ministry" && !isSinglePersonMinistryPart(part)) cards.push(renderAssignmentCard(week, part, { primary: item.helper, helper: item.primary, helperLabel: "Companheiro" }));
     }
     return cards.length ? `<section class="assignment-week-group"><h2>${esc(week.label)} | ${esc(week.reading)}</h2><div class="assignment-grid">${cards.join("")}</div></section>` : "";
   }).filter(Boolean);
@@ -1202,7 +1203,8 @@ function generateScheduleForWeek(week) {
   const chairman = pickPerson(eligible("chairman"), used, "Presidente");
   if (chairman) { schedule.chairman = chairman.name; used.add(chairman.name); }
   for (const part of week.parts) {
-    const primaryType = part.type === "study" ? "studyConductor" : part.type;
+    const singleMinistry = isSinglePersonMinistryPart(part);
+    const primaryType = part.type === "study" ? "studyConductor" : singleMinistry ? "ministrySingle" : part.type;
     const primaryPeople = state.rules.fiveMinuteTalkBrothers && isFiveMinuteTalk(part)
       ? eligibleFiveMinuteTalk()
       : part.type === "life"
@@ -1211,7 +1213,7 @@ function generateScheduleForWeek(week) {
     const primary = pickPerson(primaryPeople, used);
     if (primary) used.add(primary.name);
     const assignment = { primary: primary?.name || "" };
-    if (part.type === "ministry") {
+    if (part.type === "ministry" && !singleMinistry) {
       const helper = pickPerson(eligibleMinistryHelper(primary?.name), used, "Ajudante");
       if (helper) used.add(helper.name);
       assignment.helper = helper?.name || "";
@@ -1261,6 +1263,7 @@ function eligible(type) {
   return people.filter(person => {
     const capabilities = personCapabilities(person);
     if (type === "ministry") return ["Publicador batizado", "Publicadora batizada"].includes(person.role) && (capabilities.ministryPrimary || capabilities.ministryHelper);
+    if (type === "ministrySingle") return person.gender === "M" && person.role === "Publicador batizado" && capabilities.ministryPrimary;
     if (type in capabilities) return capabilities[type];
     if (type === "chairman") return person.role === "Anciao";
     if (type === "treasures") return ["Anciao", "Servo ministerial"].includes(person.role);
@@ -1270,6 +1273,16 @@ function eligible(type) {
     if (type === "studyReader") return person.gender === "M" && person.role === "Publicador batizado";
     return true;
   });
+}
+
+function isSinglePersonMinistryPart(part) {
+  if (part.section !== "ministry") return false;
+  const title = normalizeText(part.title || "");
+  return title.includes("discurso") || title.includes("explicando suas crencas");
+}
+
+function normalizeText(value) {
+  return String(value).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 }
 
 function eligibleMinistryHelper(primaryName = "") {

@@ -1,4 +1,4 @@
-const CACHE_NAME = "pvm-app-v25";
+const CACHE_NAME = "pvm-app-v26";
 const ASSETS = [
   "./",
   "./index.html",
