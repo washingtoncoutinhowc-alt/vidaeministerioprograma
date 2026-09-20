@@ -17,6 +17,7 @@ const specialEventLabels = {
 
 const navItems = [
   ["viewer", "VI", "Visualizacao"],
+  ["myAssignments", "MD", "Minhas designacoes"],
   ["week", "SE", "Semana atual"],
   ["programs", "PR", "Programacoes"],
   ["assignments", "S89", "Designacoes S-89"],
@@ -36,6 +37,21 @@ const capabilityLabels = {
   life: "Nossa Vida Crista",
   studyConductor: "Dirigir estudo biblico",
   studyReader: "Leitor do estudo biblico"
+};
+
+const partRuleDefaults = {
+  "explicando suas crencas": {
+    label: "Explicando suas crenças",
+    participants: "oneOrTwo",
+    genders: ["M", "F"],
+    roles: ["Publicador batizado", "Publicadora batizada"]
+  },
+  "o que voce diria": {
+    label: "O que você diria?",
+    participants: "one",
+    genders: ["M"],
+    roles: ["Anciao", "Servo ministerial"]
+  }
 };
 
 const basePeople = [{"name":"André Luiz Olivas de Figueiredo Pereira","gender":"M","role":"Anciao","blocked":false,"capabilities":{"chairman":true,"treasures":true,"bibleReading":false,"ministryPrimary":false,"ministryHelper":false,"life":true,"studyConductor":true,"studyReader":false}},{"name":"Jeferson Eduardo Serboncini","gender":"M","role":"Anciao","blocked":false,"capabilities":{"chairman":true,"treasures":true,"bibleReading":false,"ministryPrimary":false,"ministryHelper":false,"life":true,"studyConductor":true,"studyReader":false}},{"name":"John Hebert Ferreira de Castro","gender":"M","role":"Anciao","blocked":false,"capabilities":{"chairman":true,"treasures":true,"bibleReading":false,"ministryPrimary":false,"ministryHelper":false,"life":true,"studyConductor":true,"studyReader":false}},{"name":"Júlio César Godoy Melo","gender":"M","role":"Anciao","blocked":false,"capabilities":{"chairman":true,"treasures":true,"bibleReading":false,"ministryPrimary":false,"ministryHelper":false,"life":true,"studyConductor":true,"studyReader":false}},{"name":"Pedro Damião Pereira","gender":"M","role":"Anciao","blocked":false,"capabilities":{"chairman":true,"treasures":true,"bibleReading":false,"ministryPrimary":false,"ministryHelper":false,"life":true,"studyConductor":true,"studyReader":false}},{"name":"Washington Coutinho da Silva","gender":"M","role":"Anciao","blocked":false,"capabilities":{"chairman":true,"treasures":true,"bibleReading":false,"ministryPrimary":false,"ministryHelper":false,"life":true,"studyConductor":true,"studyReader":false}},{"name":"Ailton de Souza Rocha","gender":"M","role":"Servo ministerial","blocked":false,"capabilities":{"chairman":false,"treasures":true,"bibleReading":false,"ministryPrimary":false,"ministryHelper":false,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Anderson Carlos de Oliveira","gender":"M","role":"Servo ministerial","blocked":false,"capabilities":{"chairman":false,"treasures":true,"bibleReading":false,"ministryPrimary":false,"ministryHelper":false,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Ataíde Alexandre Marcelino Júnior","gender":"M","role":"Servo ministerial","blocked":false,"capabilities":{"chairman":false,"treasures":true,"bibleReading":false,"ministryPrimary":false,"ministryHelper":false,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Gilbert Romão de Siqueira","gender":"M","role":"Servo ministerial","blocked":false,"capabilities":{"chairman":false,"treasures":true,"bibleReading":false,"ministryPrimary":false,"ministryHelper":false,"life":false,"studyConductor":false,"studyReader":false}},{"name":"José Neto Sanches","gender":"M","role":"Servo ministerial","blocked":false,"capabilities":{"chairman":false,"treasures":true,"bibleReading":false,"ministryPrimary":false,"ministryHelper":false,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Ailton Carlos Rodrigues","gender":"M","role":"Publicador batizado","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":true,"ministryPrimary":false,"ministryHelper":false,"life":false,"studyConductor":false,"studyReader":true}},{"name":"Amin Carlos Gonçalves","gender":"M","role":"Publicador batizado","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":true,"ministryPrimary":false,"ministryHelper":false,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Anderson Dias Gabriel","gender":"M","role":"Publicador batizado","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":true,"ministryPrimary":false,"ministryHelper":false,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Éder David","gender":"M","role":"Publicador batizado","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":true,"ministryPrimary":false,"ministryHelper":false,"life":false,"studyConductor":false,"studyReader":false}},{"name":"José Vieira","gender":"M","role":"Publicador batizado","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":true,"ministryPrimary":false,"ministryHelper":false,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Sebastião Rafael","gender":"M","role":"Publicador batizado","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":true,"ministryPrimary":false,"ministryHelper":false,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Silvio Gabriel","gender":"M","role":"Publicador batizado","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":true,"ministryPrimary":false,"ministryHelper":false,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Eduardo D. d. Santos","gender":"M","role":"Publicador batizado","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":true,"ministryPrimary":false,"ministryHelper":false,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Felipe G. Reis","gender":"M","role":"Publicador batizado","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":true,"ministryPrimary":false,"ministryHelper":false,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Felipe Peterson D. Diniz","gender":"M","role":"Publicador batizado","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":true,"ministryPrimary":false,"ministryHelper":false,"life":false,"studyConductor":false,"studyReader":false}},{"name":"José Jairo Marcelino","gender":"M","role":"Publicador batizado","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":true,"ministryPrimary":false,"ministryHelper":false,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Luiz Claudio Aguiar","gender":"M","role":"Publicador batizado","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":true,"ministryPrimary":false,"ministryHelper":false,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Marcelo Luiz Fonseca","gender":"M","role":"Publicador batizado","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":true,"ministryPrimary":false,"ministryHelper":false,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Márcio De Paula","gender":"M","role":"Publicador batizado","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":true,"ministryPrimary":false,"ministryHelper":false,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Marcos Antonio G. de Carvalho","gender":"M","role":"Publicador batizado","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":true,"ministryPrimary":false,"ministryHelper":false,"life":false,"studyConductor":false,"studyReader":true}},{"name":"Marcos Melo","gender":"M","role":"Publicador batizado","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":true,"ministryPrimary":false,"ministryHelper":false,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Robson M. de Almeida","gender":"M","role":"Publicador batizado","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":true,"ministryPrimary":false,"ministryHelper":false,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Ailton R. de Souza","gender":"M","role":"Publicador batizado","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":true,"ministryPrimary":false,"ministryHelper":false,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Jorge Luiz N. d. Fonseca","gender":"M","role":"Publicador batizado","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":true,"ministryPrimary":false,"ministryHelper":false,"life":false,"studyConductor":false,"studyReader":true}},{"name":"Kauã Felipe R. Inácio","gender":"M","role":"Publicador batizado","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":true,"ministryPrimary":false,"ministryHelper":false,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Luan Cristian F. d. Carmo","gender":"M","role":"Publicador batizado","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":true,"ministryPrimary":false,"ministryHelper":false,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Luiz Felipe D. d. Nascimento","gender":"M","role":"Publicador batizado","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":true,"ministryPrimary":false,"ministryHelper":false,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Roberto P. Junior Almeida","gender":"M","role":"Publicador batizado","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":true,"ministryPrimary":false,"ministryHelper":false,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Ruston de B. N. Santos","gender":"M","role":"Publicador batizado","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":true,"ministryPrimary":false,"ministryHelper":false,"life":false,"studyConductor":false,"studyReader":true}},{"name":"Tobias Albano Florenço","gender":"M","role":"Publicador batizado","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":true,"ministryPrimary":false,"ministryHelper":false,"life":false,"studyConductor":false,"studyReader":true}},{"name":"Antônio José d. Silva","gender":"M","role":"Publicador batizado","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":true,"ministryPrimary":false,"ministryHelper":false,"life":false,"studyConductor":false,"studyReader":true}},{"name":"Daniel Menezes d. Rocha","gender":"M","role":"Publicador batizado","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":true,"ministryPrimary":false,"ministryHelper":false,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Edesio A. d. Silva","gender":"M","role":"Publicador batizado","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":true,"ministryPrimary":false,"ministryHelper":false,"life":false,"studyConductor":false,"studyReader":false}},{"name":"José B. Gonçalves (Zezé)","gender":"M","role":"Publicador batizado","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":true,"ministryPrimary":false,"ministryHelper":false,"life":false,"studyConductor":false,"studyReader":false}},{"name":"José Henrique S. d. Rocha","gender":"M","role":"Publicador batizado","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":true,"ministryPrimary":false,"ministryHelper":false,"life":false,"studyConductor":false,"studyReader":true}},{"name":"Leonardo Santos Rocha","gender":"M","role":"Publicador batizado","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":true,"ministryPrimary":false,"ministryHelper":false,"life":false,"studyConductor":false,"studyReader":true}},{"name":"Felipe Grassi","gender":"M","role":"Publicador batizado","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":true,"ministryPrimary":false,"ministryHelper":false,"life":false,"studyConductor":false,"studyReader":true}},{"name":"Ana Carolina O. de F. P. Oliveira","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Ana Maria D. Gabriel","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Andréa Cassimiro d. S. Daniel","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Ângela Aparecida Oliveira Gouveia","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Camila Fernanda D. C. Olímpio","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Elzita Vieira Costa","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Hilda Henrique Novaes","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Lifa José Vieira","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Mara Lúcia David","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Maria Virgínia Olivas de Figueiredo Pereira","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Mariuza Eva R. da Silva","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Marizete Pires Olivas de Figueiredo","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Selma Gabriel Plínio","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Tereza Rosa Ribeiro","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Zilda M. de S. Rafael","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Alana C. Daniel","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Ana Clara Q. Ribeiro","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Aparecida Donizete de Paula","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Dalva A. Gonçalves","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Dayana Paula M. Serboncini","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Elaine Cristina de O. Aguiar","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Eldilei C. de Souza","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Eliete de Castro M. de Carvalho","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Flavia Grassi Reis","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Helena L. Melo","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Jandira Grassi Dos Reis","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Jennifer de O. Coutinho","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Jéssica C. de O. Nogueira","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Laura de O. Coutinho","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Leni de F. Fonseca","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Leontina B. Fonseca","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Maria Aparecida Fonseca","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Maria Edwirges Macedo","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Vera Lucia de Moraes","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Vera Lúcia EL-Kadoun","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Ana Cláudia C. d. Silva","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Bruna Raphaela B. R. Novaes","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Carolina Ribeiro B. d. S. Castro","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Gisele H. d. S. Rocha","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Isabelli Sofia d. S. Rocha","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Larissa Cristina F. Ferreira","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Luara Cristina Ferraz","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Luciana A. O. Florenço","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Márcia Cristina de M. O. N. Fonseca","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Maria Clara de Oliveira Albano Florenço","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Maria Lucy Barbosa","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Mariana A. Ferraz","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Maysa U. Almeida","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Nancy U. Almeida","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Rosilene Gomes d. S. Lopes","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Sarah B. G. Lopes","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Yasmin R. Delmarchi","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Adriana da S. Melo","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Beatriz Santos C. d. Silva","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Elaine Gomes","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Fabiane Santos G. d. S. Rocha","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Flaviane U. D. Siqueira","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Ivonete de Castro Marcelino Alexandre","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Maria de Lurdes S. Heins (Lia)","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Mell Elisa d. S. e Sousa","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Neuza M. d. Silva","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}},{"name":"Roseli A. H. Gonçalves","gender":"F","role":"Publicadora batizada","blocked":false,"capabilities":{"chairman":false,"treasures":false,"bibleReading":false,"ministryPrimary":true,"ministryHelper":true,"life":false,"studyConductor":false,"studyReader":false}}];
@@ -409,6 +425,9 @@ const defaultState = {
   activeWeekId: "",
   printWeekId: "",
   viewerWeekId: "",
+  myAssignmentsSearch: "",
+  partConfigWeekId: "",
+  partConfigNumber: "",
   sync: { enabled: false, provider: "futuro", lastSync: null },
   specialEvents: {
     circuitVisit: { start: "", end: "" },
@@ -426,8 +445,10 @@ const defaultState = {
     ministrySameGenderPair: true,
     bibleReadingBrothers: true,
     lifeElders: true,
-    fiveMinuteTalkBrothers: true
+    fiveMinuteTalkBrothers: true,
+    whatWouldYouSayEldersServants: true
   },
+  partRules: clonePartRuleDefaults(),
   manualRules: [
     { id: "manual-five-minute-talk-brothers", text: "Discurso de 5 minutos somente com publicadores masculinos.", active: true }
   ],
@@ -541,6 +562,10 @@ function clone(value) {
   return JSON.parse(JSON.stringify(value));
 }
 
+function clonePartRuleDefaults() {
+  return clone(partRuleDefaults);
+}
+
 function loadState() {
   try {
     const saved = JSON.parse(localStorage.getItem(STORE_KEY));
@@ -565,12 +590,27 @@ function normalizeState(saved) {
     contentVersion: CONTENT_VERSION,
     specialEvents: normalizeSpecialEvents(saved.specialEvents),
     rules: { ...clone(defaultState.rules), ...(saved.rules || {}) },
+    partRules: normalizePartRules(saved.partRules),
     manualRules: normalizeManualRules(saved.manualRules),
     people: Array.isArray(importedPeople) ? importedPeople : clone(defaultState.people),
     weeks: savedWeeks,
     schedules: normalizeSchedules(saved.schedules || {}, savedWeeks, contentChanged),
     history: Array.isArray(saved.history) ? saved.history : []
   };
+}
+
+function normalizePartRules(savedRules) {
+  const rules = clonePartRuleDefaults();
+  for (const [key, savedRule] of Object.entries(savedRules || {})) {
+    if (!savedRule || typeof savedRule !== "object") continue;
+    rules[key] = {
+      ...rules[key],
+      ...savedRule,
+      genders: Array.isArray(savedRule.genders) ? savedRule.genders : rules[key]?.genders || [],
+      roles: Array.isArray(savedRule.roles) ? savedRule.roles : rules[key]?.roles || []
+    };
+  }
+  return rules;
 }
 
 function normalizeWeeks(weeks) {
@@ -690,7 +730,7 @@ async function loadStateFromServer() {
 function render() {
   document.documentElement.dataset.theme = state.theme;
   document.body.classList.toggle("view-only", !CAN_EDIT);
-  const menuItems = CAN_EDIT ? navItems : navItems.filter(([id]) => id === "viewer");
+  const menuItems = CAN_EDIT ? navItems : navItems.filter(([id]) => id === "viewer" || id === "myAssignments");
   if (!menuItems.some(([id]) => id === state.activeView)) state.activeView = "viewer";
   churchLabel.textContent = `Congregacao ${state.church}`;
   nav.innerHTML = menuItems.map(([id, icon, label]) => `
@@ -701,6 +741,7 @@ function render() {
   sectionLabel.textContent = label;
   pageTitle.textContent = {
     viewer: "Visualizacao",
+    myAssignments: "Minhas designacoes",
     week: "Semana atual",
     programs: "Programacoes do mes",
     assignments: "Designacoes individuais",
@@ -710,7 +751,7 @@ function render() {
     printProgram: "Impressao da programacao",
     settings: "Configuracoes"
   }[state.activeView] || "Programacao";
-  ({ viewer: renderViewer, week: renderWeek, programs: renderPrograms, assignments: renderAssignments, people: renderPeople, rules: renderRules, history: renderHistory, printProgram: renderPrintProgram, settings: renderSettings })[state.activeView]();
+  ({ viewer: renderViewer, myAssignments: renderMyAssignments, week: renderWeek, programs: renderPrograms, assignments: renderAssignments, people: renderPeople, rules: renderRules, history: renderHistory, printProgram: renderPrintProgram, settings: renderSettings })[state.activeView]();
 }
 
 function setView(viewId) {
@@ -883,6 +924,32 @@ function renderViewerPartRow(schedule, part) {
   </article>`;
 }
 
+function renderMyAssignments() {
+  const query = state.myAssignmentsSearch || "";
+  const normalizedQuery = normalizeText(query);
+  const rows = [];
+  for (const week of state.weeks) {
+    const schedule = state.schedules[week.id];
+    if (!schedule) continue;
+    if (schedule.chairman && normalizeText(schedule.chairman).includes(normalizedQuery)) {
+      rows.push({ week, part: "Presidente da reunião", role: "Presidente", name: schedule.chairman });
+    }
+    for (const part of week.parts) {
+      const assignment = schedule.parts?.[part.n] || {};
+      if (assignment.primary && normalizeText(assignment.primary).includes(normalizedQuery)) {
+        rows.push({ week, part: part.title, role: part.type === "study" ? "Dirigente" : "Designado", name: assignment.primary });
+      }
+      if (assignment.helper && normalizeText(assignment.helper).includes(normalizedQuery)) {
+        rows.push({ week, part: part.title, role: part.type === "study" ? "Leitor" : "Ajudante", name: assignment.helper });
+      }
+    }
+  }
+  const result = query.trim()
+    ? (rows.length ? `<div class="my-assignment-list">${rows.map(row => `<article class="my-assignment-row"><strong>${esc(row.name)}</strong><span>${esc(row.week.label)}</span><span>${esc(row.part)}</span><small>${esc(row.role)}</small></article>`).join("")}</div>` : emptyState("Nenhuma designação encontrada para este nome."))
+    : `<p class="muted">Digite pelo menos parte do nome para ver as designações já publicadas.</p>`;
+  view.innerHTML = `<section class="panel my-assignments-search"><h2>Consulte suas designações</h2><p class="muted">Pesquise pelo seu nome para ver todas as partes em que foi designado.</p><div class="toolbar"><label>Nome<input id="myAssignmentsSearch" value="${esc(query)}" placeholder="Ex.: Maria Silva" autocomplete="name"></label><button class="primary" data-action="find-my-assignments">Pesquisar</button></div></section><section class="panel">${result}</section>`;
+}
+
 function renderSpecialEventBanner(week) {
   const events = specialEventsForWeek(week);
   if (!events.length) return "";
@@ -920,16 +987,18 @@ function renderPartRow(week, schedule, part) {
   const singleMinistry = isSinglePersonMinistryPart(part);
   const primaryType = part.type === "study" ? "studyConductor" : singleMinistry ? "ministrySingle" : part.type;
   const helperType = part.type === "study" ? "studyReader" : "ministry";
-  const primaryPeople = state.rules.fiveMinuteTalkBrothers && isFiveMinuteTalk(part)
-    ? eligibleFiveMinuteTalk()
-    : part.type === "life"
-      ? eligibleLifePart(week.id)
-    : eligible(primaryType);
+  const primaryPeople = partRule(part)
+    ? eligibleForPart(part, primaryType)
+    : state.rules.fiveMinuteTalkBrothers && isFiveMinuteTalk(part)
+      ? eligibleFiveMinuteTalk()
+      : part.type === "life"
+        ? eligibleLifePart(week.id)
+        : eligibleForPart(part, primaryType);
   const primaryLabel = part.type === "study" ? "Dirigente" : "Designado";
   const helperLabel = part.type === "study" ? "Leitor" : "Ajudante";
   return `<div class="part-row"><div class="part-number">${part.n}</div><div class="part-title"><strong>${esc(part.title)}</strong><span>${esc(part.minutes)}</span></div>
     ${assignmentSelect(primaryLabel, `part-${part.n}-primary`, assignment.primary || "", primaryPeople, week.id, part.n, "primary")}
-    ${(part.type === "ministry" && !singleMinistry) || part.type === "study" ? assignmentSelect(helperLabel, `part-${part.n}-helper`, assignment.helper || "", part.type === "ministry" ? eligibleMinistryHelper(assignment.primary) : eligible(helperType), week.id, part.n, "helper") : "<span></span>"}
+    ${(part.type === "ministry" && ministryPartHasHelper(part)) || part.type === "study" ? assignmentSelect(helperLabel, `part-${part.n}-helper`, assignment.helper || "", part.type === "ministry" ? eligibleMinistryHelper(assignment.primary, part) : eligible(helperType), week.id, part.n, "helper") : "<span></span>"}
   </div>`;
 }
 
@@ -1050,7 +1119,7 @@ function printAssignmentNames(part, assignment) {
     return names.length ? names.join("<br>") : "A definir";
   }
   if (assignment.primary) names.push(esc(assignment.primary));
-  if (part.type === "ministry" && !isSinglePersonMinistryPart(part) && assignment.helper) names.push(esc(assignment.helper));
+  if (part.type === "ministry" && ministryPartHasHelper(part) && assignment.helper) names.push(esc(assignment.helper));
   return names.length ? names.join("<br>") : "A definir";
 }
 
@@ -1074,7 +1143,7 @@ function renderAssignments() {
       const item = schedule.parts[part.n] || {};
       if (!item.primary) continue;
       cards.push(renderAssignmentCard(week, part, item));
-      if (item.helper && part.type === "ministry" && !isSinglePersonMinistryPart(part)) cards.push(renderAssignmentCard(week, part, { primary: item.helper, helper: item.primary, helperLabel: "Companheiro" }));
+      if (item.helper && part.type === "ministry" && ministryPartHasHelper(part)) cards.push(renderAssignmentCard(week, part, { primary: item.helper, helper: item.primary, helperLabel: "Companheiro" }));
     }
     return cards.length ? `<section class="assignment-week-group"><h2>${esc(week.label)} | ${esc(week.reading)}</h2><div class="assignment-grid">${cards.join("")}</div></section>` : "";
   }).filter(Boolean);
@@ -1158,7 +1227,8 @@ function renderRules() {
     ministrySameGenderPair: "Ministerio sem misturar irmaos com irmas",
     bibleReadingBrothers: "Leitura da Biblia com publicadores masculinos",
     lifeElders: "Nossa Vida Crista com anciaos e servos ministeriais",
-    fiveMinuteTalkBrothers: "Discurso de 5 minutos somente com publicadores masculinos"
+    fiveMinuteTalkBrothers: "Discurso de 5 minutos somente com publicadores masculinos",
+    whatWouldYouSayEldersServants: "O que você diria? somente com anciaos e servos ministeriais"
   };
   view.innerHTML = `<section class="panel"><h2>Regras automáticas</h2>${Object.entries(labels).map(([key, label]) => `<div class="rule-row"><strong>${label}</strong><button class="${state.rules[key] ? "primary" : "ghost"}" data-rule="${key}">${state.rules[key] ? "Ligada" : "Desligada"}</button></div>`).join("")}</section>
     <section class="panel"><h2>Regras manuais</h2>
@@ -1184,8 +1254,87 @@ function renderSettings() {
     <label>Quantidade de semanas<input type="number" id="weekCountInput" min="1" max="16" value="${state.weeks.length}"></label>
   </section><section class="panel"><h2>Datas especiais</h2>
     <div class="special-settings">${Object.entries(specialEventLabels).map(([key, label]) => specialEventInputs(key, label)).join("")}</div>
+  </section><section class="panel"><h2>Configurar partes</h2><p class="muted">Defina quem pode receber cada parte especial e se ela terá uma ou duas pessoas. As mudanças valem na próxima geração da programação.</p>
+    <div class="part-rule-settings">${renderPartRuleSettings()}</div>
   </section><section class="panel"><h2>Sincronizacao futura</h2><p class="muted">A base ja separa os dados locais de uma configuracao de sincronizacao. Quando houver servidor ou nuvem definidos, esta tela pode receber login e envio seguro.</p>
     <div class="toolbar"><button class="ghost" data-action="export-backup">Exportar backup</button><label class="button ghost">Importar backup<input type="file" id="importBackup" accept="application/json" hidden></label><button class="danger" data-action="reset-data">Reiniciar dados</button></div></section>`;
+}
+
+function renderPartRuleSettings() {
+  const roles = ["Anciao", "Servo ministerial", "Publicador batizado", "Publicadora batizada"];
+  const { week, part } = selectedPartForConfiguration();
+  if (!week || !part) return `<p class="muted">Não há partes cadastradas para configurar.</p>`;
+  const rule = ensurePartRule(part, week.id);
+  const key = part.configRuleId || normalizeText(part.title || "");
+  const parts = [...week.parts].sort((a, b) => Number(a.n) - Number(b.n));
+  return `<div class="part-config-selector">
+    <label>Semana<select id="partConfigWeekSelect">${state.weeks.map(item => `<option value="${esc(item.id)}" ${item.id === week.id ? "selected" : ""}>${esc(item.label)}</option>`).join("")}</select></label>
+    <label>Parte<select id="partConfigNumberSelect">${parts.map(item => `<option value="${esc(item.n)}" ${String(item.n) === String(part.n) ? "selected" : ""}>Parte ${esc(item.n)} — ${esc(item.title)}</option>`).join("")}</select></label>
+  </div><article class="part-rule-setting">
+    <h3>Parte ${esc(part.n)}</h3>
+    <label>Nome da parte<input id="partConfigNameInput" value="${esc(part.title)}"></label>
+    <label>Quantidade de participantes<select data-part-rule="${esc(key)}" data-part-rule-field="participants">
+      <option value="one" ${rule.participants === "one" ? "selected" : ""}>Somente uma pessoa</option>
+      <option value="oneOrTwo" ${rule.participants === "oneOrTwo" ? "selected" : ""}>Uma ou duas pessoas</option>
+      <option value="two" ${rule.participants === "two" ? "selected" : ""}>Duas pessoas</option>
+    </select></label>
+    <div class="part-rule-options"><strong>Sexo permitido</strong>${[["M", "Homens"], ["F", "Mulheres"]].map(([value, label]) => `<label><input type="checkbox" data-part-rule="${esc(key)}" data-part-rule-list="genders" value="${value}" ${rule.genders?.includes(value) ? "checked" : ""}> ${label}</label>`).join("")}</div>
+    <div class="part-rule-options"><strong>Privilégio permitido</strong>${roles.map(role => `<label><input type="checkbox" data-part-rule="${esc(key)}" data-part-rule-list="roles" value="${esc(role)}" ${rule.roles?.includes(role) ? "checked" : ""}> ${esc(role)}</label>`).join("")}</div>
+  </article>`;
+}
+
+function selectedPartForConfiguration() {
+  state.partConfigWeekId ||= state.activeWeekId || state.weeks[0]?.id || "";
+  const week = state.weeks.find(item => item.id === state.partConfigWeekId) || state.weeks[0];
+  if (!week) return {};
+  const parts = [...week.parts].sort((a, b) => Number(a.n) - Number(b.n));
+  if (!parts.some(item => String(item.n) === String(state.partConfigNumber))) state.partConfigNumber = String(parts[0]?.n || "");
+  return { week, part: parts.find(item => String(item.n) === String(state.partConfigNumber)) };
+}
+
+function defaultRuleForPart(part) {
+  if (part.type === "treasures") return { label: part.title, participants: "one", genders: ["M"], roles: ["Anciao", "Servo ministerial"] };
+  if (part.type === "bibleReading") return { label: part.title, participants: "one", genders: ["M"], roles: ["Publicador batizado"] };
+  if (part.type === "life" || part.type === "study") return { label: part.title, participants: "one", genders: ["M"], roles: ["Anciao"] };
+  return { label: part.title, participants: isSinglePersonMinistryPart(part) ? "one" : "two", genders: ["M", "F"], roles: ["Publicador batizado", "Publicadora batizada"] };
+}
+
+function ensurePartRule(part, weekId = "") {
+  const titleKey = normalizeText(part.title || "");
+  if (weekId && !part.configRuleId) part.configRuleId = `part-${weekId}-${part.n}`;
+  const key = part.configRuleId || titleKey;
+  state.partRules ||= {};
+  state.partRules[key] ||= clone(state.partRules[titleKey] || defaultRuleForPart(part));
+  state.partRules[key].label = part.title;
+  return state.partRules[key];
+}
+
+function updatePartRuleControl(control) {
+  const key = control.dataset.partRule;
+  const rule = state.partRules?.[key];
+  if (!rule) return;
+  const field = control.dataset.partRuleField;
+  const list = control.dataset.partRuleList;
+  if (field === "participants") rule.participants = control.value;
+  if (list) {
+    const values = new Set(rule[list] || []);
+    if (control.checked) values.add(control.value);
+    else values.delete(control.value);
+    rule[list] = [...values];
+  }
+  render();
+}
+
+function updateConfiguredPartName() {
+  const { part } = selectedPartForConfiguration();
+  const input = document.getElementById("partConfigNameInput");
+  const newName = input?.value.trim();
+  if (!part || !newName || newName === part.title) return;
+  const oldKey = part.configRuleId || normalizeText(part.title);
+  const oldRule = state.partRules?.[oldKey] || defaultRuleForPart(part);
+  part.title = newName;
+  state.partRules[oldKey] = { ...oldRule, label: newName };
+  render();
 }
 
 function specialEventInputs(key, label) {
@@ -1205,16 +1354,18 @@ function generateScheduleForWeek(week) {
   for (const part of week.parts) {
     const singleMinistry = isSinglePersonMinistryPart(part);
     const primaryType = part.type === "study" ? "studyConductor" : singleMinistry ? "ministrySingle" : part.type;
-    const primaryPeople = state.rules.fiveMinuteTalkBrothers && isFiveMinuteTalk(part)
-      ? eligibleFiveMinuteTalk()
-      : part.type === "life"
-        ? eligibleLifePart(week.id)
-      : eligible(primaryType);
+    const primaryPeople = partRule(part)
+      ? eligibleForPart(part, primaryType)
+      : state.rules.fiveMinuteTalkBrothers && isFiveMinuteTalk(part)
+        ? eligibleFiveMinuteTalk()
+        : part.type === "life"
+          ? eligibleLifePart(week.id)
+          : eligibleForPart(part, primaryType);
     const primary = pickPerson(primaryPeople, used);
     if (primary) used.add(primary.name);
     const assignment = { primary: primary?.name || "" };
-    if (part.type === "ministry" && !singleMinistry) {
-      const helper = pickPerson(eligibleMinistryHelper(primary?.name), used, "Ajudante");
+    if (part.type === "ministry" && ministryPartHasHelper(part)) {
+      const helper = pickPerson(eligibleMinistryHelper(primary?.name, part), used, "Ajudante");
       if (helper) used.add(helper.name);
       assignment.helper = helper?.name || "";
     }
@@ -1277,16 +1428,42 @@ function eligible(type) {
 
 function isSinglePersonMinistryPart(part) {
   if (part.section !== "ministry") return false;
+  const rule = partRule(part);
+  if (rule) return rule.participants === "one";
   const title = normalizeText(part.title || "");
-  return title.includes("discurso") || title.includes("explicando suas crencas");
+  return title.includes("discurso");
 }
 
 function normalizeText(value) {
   return String(value).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 }
 
-function eligibleMinistryHelper(primaryName = "") {
-  const people = eligible("ministry");
+function partRule(part) {
+  return state.partRules?.[part.configRuleId || normalizeText(part.title || "")] || null;
+}
+
+function ministryPartHasHelper(part) {
+  if (part.type !== "ministry") return false;
+  const rule = partRule(part);
+  if (rule) return rule.participants === "two" || rule.participants === "oneOrTwo";
+  return !isSinglePersonMinistryPart(part);
+}
+
+function eligibleForPart(part, fallbackType = "ministry") {
+  const rule = partRule(part);
+  if (!rule) return eligible(fallbackType);
+  const isWhatWouldYouSay = normalizeText(part.title || "") === "o que voce diria";
+  const allowedRoles = isWhatWouldYouSay && state.rules.whatWouldYouSayEldersServants
+    ? ["Anciao", "Servo ministerial"]
+    : rule.roles;
+  return activePeople().filter(person =>
+    (!rule.genders?.length || rule.genders.includes(person.gender)) &&
+    (!allowedRoles?.length || allowedRoles.includes(person.role))
+  );
+}
+
+function eligibleMinistryHelper(primaryName = "", part = null) {
+  const people = part ? eligibleForPart(part, "ministry") : eligible("ministry");
   if (!state.rules.ministrySameGenderPair || !primaryName) return people;
   const primary = state.people.find(person => person.name === primaryName);
   if (!primary) return people;
@@ -1711,11 +1888,12 @@ function esc(value) {
 document.addEventListener("click", event => {
   const navButton = event.target.closest("[data-view]");
   if (navButton) {
-    if (!CAN_EDIT && navButton.dataset.view !== "viewer") return;
+    if (!CAN_EDIT && !["viewer", "myAssignments"].includes(navButton.dataset.view)) return;
     setView(navButton.dataset.view);
   }
   const action = event.target.closest("[data-action]")?.dataset.action;
   if (action === "admin-login") { loginAdmin(); return; }
+  if (action === "find-my-assignments") { state.myAssignmentsSearch = document.getElementById("myAssignmentsSearch")?.value || ""; render(); return; }
   if (!CAN_EDIT) return;
   const weekCard = event.target.closest("[data-week-card]");
   if (weekCard) { state.activeWeekId = weekCard.dataset.weekCard; setView("week"); }
@@ -1767,6 +1945,9 @@ document.addEventListener("click", event => {
 document.addEventListener("change", event => {
   if (event.target.id === "viewerWeekSelect") { state.viewerWeekId = event.target.value; render(); return; }
   if (!CAN_EDIT) return;
+  if (event.target.id === "partConfigWeekSelect") { state.partConfigWeekId = event.target.value; state.partConfigNumber = ""; render(); return; }
+  if (event.target.id === "partConfigNumberSelect") { state.partConfigNumber = event.target.value; render(); return; }
+  if (event.target.id === "partConfigNameInput") { updateConfiguredPartName(); return; }
   if (event.target.id === "generationMonthSelect") { state.generationMonth = event.target.value; render(); return; }
   if (event.target.id === "assignmentMonthSelect") { state.assignmentMonth = event.target.value; state.assignmentWeekId = ""; render(); return; }
   if (event.target.id === "assignmentWeekSelect") { state.assignmentWeekId = event.target.value; render(); return; }
@@ -1779,12 +1960,14 @@ document.addEventListener("change", event => {
   if (event.target.id === "printWeekSelect") { state.printWeekId = event.target.value; render(); }
   if (event.target.id === "themeInput") { state.theme = event.target.value; render(); }
   if (event.target.id === "churchInput") { state.church = event.target.value; render(); }
+  if (event.target.matches("[data-part-rule]")) { updatePartRuleControl(event.target); return; }
   if (event.target.matches("[data-special-event]")) updateSpecialEvent(event.target);
   if (event.target.id === "monthStartInput" || event.target.id === "weekCountInput") confirmAction("Recriar semanas?", "As semanas e designacoes geradas serao reiniciadas.", regenerateWeeksFromSettings);
   if (event.target.id === "importBackup" && event.target.files[0]) importBackup(event.target.files[0]);
 });
 
 document.addEventListener("input", event => {
+  if (event.target.id === "myAssignmentsSearch") { state.myAssignmentsSearch = event.target.value; return; }
   if (!CAN_EDIT) return;
   if (event.target.id === "historySearch") {
     const term = event.target.value.toLowerCase();
