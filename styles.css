@@ -167,6 +167,8 @@ label { display: grid; gap: 6px; font-weight: 700; font-size: 13px; }
 .viewer-names { font-weight: 850; color: var(--text); }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
 .week-list { display: grid; gap: 16px; }
+.program-year-group { display: grid; gap: 12px; margin-top: 26px; }
+.program-year-group > h2 { margin: 0; padding-bottom: 8px; border-bottom: 2px solid var(--primary); color: var(--primary); font-size: 24px; }
 .week-card { overflow: hidden; text-align: left; color: var(--text); padding: 12px; display: grid; grid-template-columns: 176px minmax(0, 1fr); gap: 22px; align-items: center; border-left: 6px solid var(--teal); }
 .week-card.variant-1 { border-left-color: var(--gold); }
 .week-card.variant-2 { border-left-color: var(--wine); }

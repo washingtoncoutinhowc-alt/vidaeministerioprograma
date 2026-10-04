@@ -418,6 +418,26 @@ const weekCorrections = {
   }
 };
 
+Object.assign(weekCorrections, {
+  "2026-11-02": { reading: "JEREMIAS 49-50", image: "assets/weeks/202611-week-1.jpg" },
+  "2026-11-09": { reading: "JEREMIAS 51-52", image: "assets/weeks/202611-week-2.jpg" },
+  "2026-11-16": { reading: "LAMENTAÇÕES 1-2", image: "assets/weeks/202611-week-3.jpg" },
+  "2026-11-23": { reading: "LAMENTAÇÕES 3-5", image: "assets/weeks/202611-week-4.jpg" },
+  "2026-11-30": { reading: "EZEQUIEL 1-2", image: "assets/weeks/202611-week-5.jpg" },
+  "2026-12-07": { reading: "EZEQUIEL 3-5", image: "assets/weeks/202611-week-6.jpg" },
+  "2026-12-14": { reading: "EZEQUIEL 6-7", image: "assets/weeks/202611-week-7.jpg" },
+  "2026-12-21": { reading: "EZEQUIEL 8-10", image: "assets/weeks/202611-week-8.jpg" },
+  "2026-12-28": { reading: "EZEQUIEL 9-10", image: "assets/weeks/202611-week-9.jpg" },
+  "2027-01-04": { reading: "EZEQUIEL 11-12", image: "assets/weeks/202701-week-1.jpg" },
+  "2027-01-11": { reading: "EZEQUIEL 13-14", image: "assets/weeks/202701-week-2.jpg" },
+  "2027-01-18": { reading: "EZEQUIEL 15-17", image: "assets/weeks/202701-week-3.jpg" },
+  "2027-01-25": { reading: "EZEQUIEL 18-20", image: "assets/weeks/202701-week-4.jpg" },
+  "2027-02-01": { reading: "EZEQUIEL 21-22", image: "assets/weeks/202701-week-5.jpg" },
+  "2027-02-08": { reading: "EZEQUIEL 23-24", image: "assets/weeks/202701-week-6.jpg" },
+  "2027-02-15": { reading: "EZEQUIEL 25-27", image: "assets/weeks/202701-week-7.jpg" },
+  "2027-02-22": { reading: "EZEQUIEL 28-30", image: "assets/weeks/202701-week-8.jpg" }
+});
+
 const defaultState = {
   church: "Vila Brasil",
   theme: "light",
@@ -458,7 +478,7 @@ const defaultState = {
     id: crypto.randomUUID ? crypto.randomUUID() : `p-${index}`,
     ...person
   })),
-  weeks: generateWeeks("2026-06-01", 22).filter(week => !hiddenWeekIds.has(week.id)),
+  weeks: generateWeeks("2026-06-01", 39).filter(week => !hiddenWeekIds.has(week.id)),
   schedules: {},
   history: []
 };
@@ -537,6 +557,10 @@ function iso(date) {
 
 function formatWeekRange(from, to) {
   const month = new Intl.DateTimeFormat("pt-BR", { month: "long" });
+  if (from.getFullYear() !== to.getFullYear()) {
+    const toDay = to.getDate() === 1 ? "1.º" : String(to.getDate());
+    return `${from.getDate()} de ${month.format(from)} de ${from.getFullYear()}–${toDay} de ${month.format(to)} de ${to.getFullYear()}`;
+  }
   if (from.getMonth() === to.getMonth()) return `${from.getDate()}-${to.getDate()} de ${month.format(from)}`;
   const toDay = to.getDate() === 1 ? "1.º" : String(to.getDate());
   return `${from.getDate()} de ${month.format(from)}–${toDay} de ${month.format(to)}`;
@@ -1030,13 +1054,18 @@ function personSelect(id, selected, people, weekId, partNumber, field) {
 
 function renderPrograms() {
   state.generationMonth ||= monthKey(state.activeWeekId || state.weeks[0]?.id);
+  const groupedWeeks = state.weeks.reduce((groups, week) => {
+    const year = week.id.slice(0, 4);
+    (groups[year] ||= []).push(week);
+    return groups;
+  }, {});
   view.innerHTML = `<section class="panel"><div class="month-generate-bar">
     <label>Mes para gerar<select id="generationMonthSelect">${monthOptions().map(option => `<option value="${esc(option.value)}" ${option.value === state.generationMonth ? "selected" : ""}>${esc(option.label)}</option>`).join("")}</select></label>
     <div class="toolbar">
     <button class="primary" data-action="generate-selected-month">Gerar mes escolhido</button>
     <button class="ghost" data-action="add-month">Adicionar mes</button>
     <button class="ghost" data-action="print-week">Exportar PDF</button>
-  </div></div></section><div class="week-list">${state.weeks.map(week => {
+  </div></div></section>${Object.entries(groupedWeeks).map(([year, weeks]) => `<section class="program-year-group"><h2>${esc(year)}</h2><div class="week-list">${weeks.map(week => {
     const events = specialEventsForWeek(week);
     const hasSpecialEvent = events.length > 0;
     return `
@@ -1048,7 +1077,7 @@ function renderPrograms() {
         <p>${esc(week.reading)}</p>
       </div>
     </button>`;
-  }).join("")}</div>`;
+  }).join("")}</div></section>`).join("")}`;
 }
 
 function renderPrintProgram() {
