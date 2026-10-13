@@ -5,7 +5,7 @@ const ADMIN_MODE = new URLSearchParams(location.search).has("admin");
 const LOCAL_EDIT = location.protocol === "file:" || location.hostname === "127.0.0.1" || location.hostname === "localhost";
 let CAN_EDIT = LOCAL_EDIT || Boolean(sessionStorage.getItem(ADMIN_TOKEN_KEY));
 const PEOPLE_SOURCE = "cadastro-xlsm-2026-05-16";
-const CONTENT_VERSION = "apostilas-jun-out-2026-v7";
+const CONTENT_VERSION = "apostilas-nov2026-fev2027-v1";
 const hiddenWeekIds = new Set();
 
 const specialEventLabels = {
@@ -419,24 +419,40 @@ const weekCorrections = {
 };
 
 Object.assign(weekCorrections, {
-  "2026-11-02": { reading: "JEREMIAS 49-50", image: "assets/weeks/202611-week-1.jpg" },
-  "2026-11-09": { reading: "JEREMIAS 51-52", image: "assets/weeks/202611-week-2.jpg" },
-  "2026-11-16": { reading: "LAMENTAÇÕES 1-2", image: "assets/weeks/202611-week-3.jpg" },
-  "2026-11-23": { reading: "LAMENTAÇÕES 3-5", image: "assets/weeks/202611-week-4.jpg" },
-  "2026-11-30": { reading: "EZEQUIEL 1-2", image: "assets/weeks/202611-week-5.jpg" },
-  "2026-12-07": { reading: "EZEQUIEL 3-5", image: "assets/weeks/202611-week-6.jpg" },
-  "2026-12-14": { reading: "EZEQUIEL 6-7", image: "assets/weeks/202611-week-7.jpg" },
-  "2026-12-21": { reading: "EZEQUIEL 8-10", image: "assets/weeks/202611-week-8.jpg" },
-  "2026-12-28": { reading: "EZEQUIEL 9-10", image: "assets/weeks/202611-week-9.jpg" },
-  "2027-01-04": { reading: "EZEQUIEL 11-12", image: "assets/weeks/202701-week-1.jpg" },
-  "2027-01-11": { reading: "EZEQUIEL 13-14", image: "assets/weeks/202701-week-2.jpg" },
-  "2027-01-18": { reading: "EZEQUIEL 15-17", image: "assets/weeks/202701-week-3.jpg" },
-  "2027-01-25": { reading: "EZEQUIEL 18-20", image: "assets/weeks/202701-week-4.jpg" },
-  "2027-02-01": { reading: "EZEQUIEL 21-22", image: "assets/weeks/202701-week-5.jpg" },
-  "2027-02-08": { reading: "EZEQUIEL 23-24", image: "assets/weeks/202701-week-6.jpg" },
-  "2027-02-15": { reading: "EZEQUIEL 25-27", image: "assets/weeks/202701-week-7.jpg" },
-  "2027-02-22": { reading: "EZEQUIEL 28-30", image: "assets/weeks/202701-week-8.jpg" }
+  "2026-11-02": officialWeek("JEREMIAS 49-50", ["1", "44", "33"], "202611-week-1.jpg", "Ajude outros a se beneficiar da misericórdia de Jeová", ["Iniciando conversas|3", "Cultivando o interesse|4", "Fazendo discípulos|5"], "Nunca se Esqueça do Que Jeová se Lembra"),
+  "2026-11-09": officialWeek("JEREMIAS 51-52", ["98", "10", "150"], "202611-week-2.jpg", "Não siga o exemplo de Zedequias", ["Iniciando conversas|3", "Iniciando conversas|4", "Discurso|5|treasures"], "Nossos donativos dão glória ao belo nome de Jeová"),
+  "2026-11-16": officialWeek("LAMENTAÇÕES 1-2", ["28", "90", "75"], "202611-week-3.jpg", "Uma reação compreensível diante de uma terrível perda", ["Iniciando conversas|3", "Cultivando o interesse|4", "O que você diria?|5"], "Não se esqueça de nossos irmãos e irmãs inativos"),
+  "2026-11-23": officialWeek("LAMENTAÇÕES 3-5", ["158", "109", "74"], "202611-week-4.jpg", "Não desista quando passar por provações", ["Iniciando conversas|3", "Iniciando conversas|4", "Discurso|5|treasures"], "Ajude os cuidadores a não desanimar"),
+  "2026-11-30": officialWeek("EZEQUIEL 1-2", ["65", "63", "134"], "202611-week-5.jpg", "Acompanhe o passo do carro celestial de Jeová", ["Iniciando conversas|3", "Fazendo discípulos|5", "Discurso|4|treasures"], "Necessidades locais"),
+  "2026-12-07": officialWeek("EZEQUIEL 3-4", ["71", "161", "7"], "202611-week-6.jpg", "Por que não temos medo de pregar?", ["Iniciando conversas|3", "Iniciando conversas|4", "Fazendo discípulos|5"], "Necessidades locais"),
+  "2026-12-14": officialWeek("EZEQUIEL 5-6", ["49", "153", "133"], "202611-week-7.jpg", "Pessoas que adoram ídolos deixam Jeová muito triste", ["Iniciando conversas|3", "Cultivando o interesse|4", "O que você diria?|5"], "Por que não participamos de cerimônias nacionalistas?"),
+  "2026-12-21": officialWeek("EZEQUIEL 7-8", ["128", "139", "154"], "202611-week-8.jpg", "O dia de Jeová virá na hora certa", ["Iniciando conversas|3", "Cultivando o interesse|4", "Fazendo discípulos|5"], "Pense nas consequências"),
+  "2026-12-28": officialWeek("EZEQUIEL 9-10", ["119", "60", "135"], "202611-week-9.jpg", "Ajude outros a sobreviver ao Armagedom", ["Iniciando conversas|3", "Cultivando o interesse|4", "Explicando suas crenças|5"], "Salve a si mesmo e a quem escuta você"),
+  "2027-01-04": officialWeek("EZEQUIEL 11-12", ["83", "2", "164"], "202701-week-1.jpg", "Talvez eles deem atenção", ["Cultivando o interesse|3", "Cultivando o interesse|4", "O que você diria?|5"], "Necessidades locais"),
+  "2027-01-11": officialWeek("EZEQUIEL 13-14", ["39", "56", "98"], "202701-week-2.jpg", "Jeová valoriza os seus esforços de fazer o que é certo", ["Iniciando conversas|3", "Cultivando o interesse|4", "Explicando suas crenças|5"], "Desenvolva uma forte identidade cristã enquanto você é jovem"),
+  "2027-01-18": officialWeek("EZEQUIEL 15-16", ["130", "58", "159"], "202701-week-3.jpg", "Não me sentirei mais ofendido", ["Iniciando conversas|3", "Cultivando o interesse|4", "Explicando suas crenças|5"], "Não se esqueça de voltar"),
+  "2027-01-25": officialWeek("EZEQUIEL 17-18", ["30", "3", "94"], "202701-week-4.jpg", "Jeová nos considera responsáveis pelas nossas ações", ["Fazendo discípulos|2", "Fazendo discípulos|3", "Fazendo discípulos|3", "Fazendo discípulos|4"], "Confie em Jeová ao passar por problemas de saúde"),
+  "2027-02-01": officialWeek("EZEQUIEL 19-20", ["11", "76", "128"], "202701-week-5.jpg", "Agi por causa do meu próprio nome", ["O que você diria?|5", "Cultivando o interesse|2", "Discurso|5|treasures"], "Como podemos continuar zelosos no ministério?"),
+  "2027-02-08": officialWeek("EZEQUIEL 21-22", ["122", "104", "114"], "202701-week-6.jpg", "Continue moralmente puro num mundo impuro", ["Iniciando conversas|3", "Cultivando o interesse|4", "Explicando suas crenças|5"], "Não deixe que nada o impeça de servir a Jeová com uma consciência limpa"),
+  "2027-02-15": officialWeek("EZEQUIEL 23-24", ["49", "73", "124"], "202701-week-7.jpg", "Aprenda da ilustração sobre Oolá e Oolibá", ["Iniciando conversas|3", "Cultivando o interesse|4", "Discurso|5|treasures"], "Relatório anual de serviço"),
+  "2027-02-22": officialWeek("EZEQUIEL 25-26", ["107", "64", "35"], "202701-week-8.jpg", "Aprenda de como Israel lidou com outras nações", ["Fazendo discípulos|2", "Fazendo discípulos|3", "Fazendo discípulos|3", "Fazendo discípulos|4"], "Necessidades locais", "Campanha da Celebração — Início no sábado, 27 de fevereiro")
 });
+
+function officialWeek(reading, [opening, middle, closing], imageName, treasureTitle, ministryEntries, lifeTitle, extraLifeTitle = "") {
+  const parts = [
+    { n: 1, section: "treasures", title: treasureTitle, minutes: "10 min", type: "treasures" },
+    { n: 2, section: "treasures", title: "Joias espirituais", minutes: "10 min", type: "treasures" },
+    { n: 3, section: "treasures", title: "Leitura da Bíblia", minutes: "4 min", type: "bibleReading" },
+    ...ministryEntries.map((entry, index) => {
+      const [title, minutes, type] = entry.split("|");
+      return { n: index + 4, section: "ministry", title, minutes: `${minutes} min`, type: type || "ministry" };
+    }),
+    { n: ministryEntries.length + 4, section: "life", title: lifeTitle, minutes: "15 min", type: "life" },
+    ...(extraLifeTitle ? [{ n: ministryEntries.length + 5, section: "life", title: extraLifeTitle, minutes: "5 min", type: "life" }] : []),
+    { n: ministryEntries.length + 5 + (extraLifeTitle ? 1 : 0), section: "life", title: "Estudo bíblico de congregação", minutes: "30 min", type: "study" }
+  ];
+  return { reading, songs: { opening, middle, closing }, image: `assets/weeks/${imageName}`, parts };
+}
 
 const defaultState = {
   church: "Vila Brasil",
@@ -666,7 +682,7 @@ function normalizeSchedules(schedules, weeks, resetCorrectedWeeks = false) {
   const copy = { ...schedules };
   if (!resetCorrectedWeeks) return copy;
   for (const week of weeks) {
-    if (weekCorrections[week.id]) delete copy[week.id];
+    if (week.id >= "2026-11-02" && weekCorrections[week.id]) delete copy[week.id];
   }
   return copy;
 }
