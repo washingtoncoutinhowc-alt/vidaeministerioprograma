@@ -1,12 +1,12 @@
-﻿const STORE_KEY = "pvm-professional-state-v1";
+const STORE_KEY = "pvm-professional-state-v1";
 const API_STATE_URL = location.protocol === "file:" ? "http://127.0.0.1:4182/api/state" : "/api/state";
 const ADMIN_TOKEN_KEY = "pvm-admin-token";
 const ADMIN_MODE = new URLSearchParams(location.search).has("admin");
 const LOCAL_EDIT = location.protocol === "file:" || location.hostname === "127.0.0.1" || location.hostname === "localhost";
 let CAN_EDIT = LOCAL_EDIT || Boolean(sessionStorage.getItem(ADMIN_TOKEN_KEY));
 const PEOPLE_SOURCE = "cadastro-xlsm-2026-05-16";
-const CONTENT_VERSION = "apostilas-nov2026-fev2027-v1";
-const hiddenWeekIds = new Set();
+const CONTENT_VERSION = "apostilas-nov2026-abr2027-v2";
+const hiddenWeekIds = new Set(["2027-03-22"]);
 
 const specialEventLabels = {
   circuitVisit: "Visita do superintendente",
@@ -429,12 +429,20 @@ Object.assign(weekCorrections, {
   "2026-12-21": officialWeek("EZEQUIEL 7-8", ["128", "139", "154"], "202611-week-8.jpg", "O dia de Jeová virá na hora certa", ["Iniciando conversas|3", "Cultivando o interesse|4", "Fazendo discípulos|5"], "Pense nas consequências"),
   "2026-12-28": officialWeek("EZEQUIEL 9-10", ["119", "60", "135"], "202611-week-9.jpg", "Ajude outros a sobreviver ao Armagedom", ["Iniciando conversas|3", "Cultivando o interesse|4", "Explicando suas crenças|5"], "Salve a si mesmo e a quem escuta você"),
   "2027-01-04": officialWeek("EZEQUIEL 11-12", ["83", "2", "164"], "202701-week-1.jpg", "Talvez eles deem atenção", ["Cultivando o interesse|3", "Cultivando o interesse|4", "O que você diria?|5"], "Necessidades locais"),
-  "2027-01-11": officialWeek("EZEQUIEL 13-14", ["39", "56", "98"], "202701-week-2.jpg", "Jeová valoriza os seus esforços de fazer o que é certo", ["Iniciando conversas|3", "Cultivando o interesse|4", "Explicando suas crenças|5"], "Desenvolva uma forte identidade cristã enquanto você é jovem"),
+  "2027-01-11": officialWeek("EZEQUIEL 13-14", ["39", "56", "98"], "202701-week-2-cover.jpg", "Jeová valoriza os seus esforços de fazer o que é certo", ["Iniciando conversas|3", "Cultivando o interesse|4", "Explicando suas crenças|5"], "Desenvolva uma forte identidade cristã enquanto você é jovem"),
   "2027-01-18": officialWeek("EZEQUIEL 15-16", ["130", "58", "159"], "202701-week-3.jpg", "Não me sentirei mais ofendido", ["Iniciando conversas|3", "Cultivando o interesse|4", "Explicando suas crenças|5"], "Não se esqueça de voltar"),
   "2027-01-25": officialWeek("EZEQUIEL 17-18", ["30", "3", "94"], "202701-week-4.jpg", "Jeová nos considera responsáveis pelas nossas ações", ["Fazendo discípulos|2", "Fazendo discípulos|3", "Fazendo discípulos|3", "Fazendo discípulos|4"], "Confie em Jeová ao passar por problemas de saúde"),
   "2027-02-01": officialWeek("EZEQUIEL 19-20", ["11", "76", "128"], "202701-week-5.jpg", "Agi por causa do meu próprio nome", ["O que você diria?|5", "Cultivando o interesse|2", "Discurso|5|treasures"], "Como podemos continuar zelosos no ministério?"),
   "2027-02-08": officialWeek("EZEQUIEL 21-22", ["122", "104", "114"], "202701-week-6.jpg", "Continue moralmente puro num mundo impuro", ["Iniciando conversas|3", "Cultivando o interesse|4", "Explicando suas crenças|5"], "Não deixe que nada o impeça de servir a Jeová com uma consciência limpa"),
   "2027-02-15": officialWeek("EZEQUIEL 23-24", ["49", "73", "124"], "202701-week-7.jpg", "Aprenda da ilustração sobre Oolá e Oolibá", ["Iniciando conversas|3", "Cultivando o interesse|4", "Discurso|5|treasures"], "Relatório anual de serviço"),
+  "2027-03-01": officialWeek("EZEQUIEL 27-28", ["123", "114", "8"], "202703-week-1.jpg", "Proteja seu coração contra a arrogância", ["Iniciando conversas|1", "Iniciando conversas|3", "Iniciando conversas|3", "Cultivando o interesse|4"], "Seja paciente, e não arrogante"),
+  "2027-03-08": officialWeek("EZEQUIEL 29-30", ["8", "151", "2"], "202703-week-2.jpg", "Jeová se lembra do que fazemos por ele", ["Iniciando conversas|3", "Iniciando conversas|4", "Explicando suas crenças|5"], "Lembre-se de Jeová durante a sua juventude", "Atualizações do Departamento Local de Projeto/Construção — 2027"),
+  "2027-03-15": officialWeek("EZEQUIEL 31-32", ["150", "18", "21"], "202703-week-3.jpg", "Os governantes poderosos não têm a mínima chance contra Jeová!", ["Iniciando conversas|3", "Cultivando o interesse|4", "Cultivando o interesse|5"], "Como você pode se preparar?", "Realizações da Organização, março"),
+  "2027-03-29": officialWeek("EZEQUIEL 33", ["1", "32", "135"], "202703-week-4.jpg", "Jeová sempre faz o que é certo", ["Iniciando conversas|3", "Cultivando o interesse|4", "Cultivando o interesse|5"], "Necessidades locais"),
+  "2027-04-05": officialWeek("EZEQUIEL 34", ["4", "99", "153"], "202703-week-5.jpg", "Jeová pastoreia suas ovelhas", ["Fazendo discípulos|2", "Fazendo discípulos|4", "Fazendo discípulos|3", "Fazendo discípulos|3"], "Necessidades locais"),
+  "2027-04-12": officialWeek("EZEQUIEL 35-36", ["148", "10", "30"], "202703-week-6.jpg", "Ele agiu para santificar Seu nome", ["Iniciando conversas|3", "O que você diria?|5", "Discurso|5|treasures"], "Nós glorificamos o nome de Deus"),
+  "2027-04-19": officialWeek("EZEQUIEL 37", ["113", "157", "165"], "202703-week-7.jpg", "Dois bastões se tornariam um só", ["Iniciando conversas|4", "Iniciando conversas|3", "Explicando suas crenças|5"], "O Corpo Governante Unido Com os Irmãos — Parte 2"),
+  "2027-04-26": officialWeek("EZEQUIEL 38-39", ["12", "53", "133"], "202703-week-8.jpg", "A reação de Jeová ao ataque de Gogue", ["Fazendo discípulos|2", "Fazendo discípulos|2", "Fazendo discípulos|4", "Fazendo discípulos|4"], "Você consegue ver a ajuda dos anjos quando está pregando?"),
   "2027-02-22": officialWeek("EZEQUIEL 25-26", ["107", "64", "35"], "202701-week-8.jpg", "Aprenda de como Israel lidou com outras nações", ["Fazendo discípulos|2", "Fazendo discípulos|3", "Fazendo discípulos|3", "Fazendo discípulos|4"], "Necessidades locais", "Campanha da Celebração — Início no sábado, 27 de fevereiro")
 });
 
@@ -490,11 +498,12 @@ const defaultState = {
   ],
   peopleSource: PEOPLE_SOURCE,
   contentVersion: CONTENT_VERSION,
+  absences: [],
   people: basePeople.map((person, index) => ({
     id: crypto.randomUUID ? crypto.randomUUID() : `p-${index}`,
     ...person
   })),
-  weeks: generateWeeks("2026-06-01", 39).filter(week => !hiddenWeekIds.has(week.id)),
+  weeks: generateWeeks("2026-06-01", 48).filter(week => !hiddenWeekIds.has(week.id)),
   schedules: {},
   history: []
 };
@@ -634,9 +643,66 @@ function normalizeState(saved) {
     manualRules: normalizeManualRules(saved.manualRules),
     people: Array.isArray(importedPeople) ? importedPeople : clone(defaultState.people),
     weeks: savedWeeks,
-    schedules: normalizeSchedules(saved.schedules || {}, savedWeeks, contentChanged),
+    schedules: normalizeSchedules(saved.schedules || {}, savedWeeks, false),
+    absences: normalizeAbsences(saved.absences),
     history: Array.isArray(saved.history) ? saved.history : []
   };
+}
+
+function normalizeAbsences(absences) {
+  return (Array.isArray(absences) ? absences : []).filter(a => a && a.personId && /^\d{4}-\d{2}-\d{2}$/.test(a.start || "") && /^\d{4}-\d{2}-\d{2}$/.test(a.end || "") && a.end >= a.start).map(a => ({
+    id: a.id || `absence-${Math.random().toString(36).slice(2)}`, personId: a.personId,
+    start: a.start, end: a.end, reason: String(a.reason || "")
+  }));
+}
+
+function absentDuringWeek(person, weekId) {
+  if (!weekId || !person) return false;
+  const week = state.weeks.find(w => w.id === weekId);
+  const from = week?.from || weekId;
+  const to = week?.to || weekId;
+  return (state.absences || []).some(a => a.personId === person.id && a.start <= to && a.end >= from);
+}
+
+function isUnavailableForWeek(name, weekId) {
+  const person = state.people.find(p => p.name === name);
+  return Boolean(person && (person.blocked || absentDuringWeek(person, weekId)));
+}
+
+function absenceSummary(person) {
+  const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/Sao_Paulo" });
+  const current = (state.absences || []).find(a => a.personId === person.id && a.start <= today && a.end >= today);
+  return person.blocked ? "Indisponível" : current ? `Ausente até ${current.end.split("-").reverse().join("/")}` : "Ativo";
+}
+
+function editAbsence(absenceId = "", personId = "") {
+  const absence = (state.absences || []).find(a => a.id === absenceId);
+  const dialog = document.getElementById("dialog");
+  document.getElementById("dialogTitle").textContent = absence ? "Editar ausência" : "Registrar ausência";
+  document.getElementById("dialogMessage").innerHTML = `<div class="form-grid" id="absenceForm">
+    <label>Publicador<select name="personId" required>${state.people.map(p => `<option value="${esc(p.id)}" ${p.id === (absence?.personId || personId) ? "selected" : ""}>${esc(p.name)}</option>`).join("")}</select></label>
+    <label>Data inicial<input type="date" name="start" required value="${esc(absence?.start || "")}"></label>
+    <label>Data final<input type="date" name="end" required value="${esc(absence?.end || "")}"></label>
+    <label>Motivo (opcional)<input name="reason" maxlength="160" value="${esc(absence?.reason || "")}" placeholder="Ex.: viagem"></label>
+  </div>`;
+  dialog.showModal();
+  dialog.onclose = () => {
+    if (dialog.returnValue !== "confirm") return;
+    const form = document.getElementById("absenceForm");
+    if (!form) return;
+    const record = Object.fromEntries(new FormData(form).entries());
+    if (!record.personId || !record.start || !record.end || record.end < record.start) {
+      toast("Preencha um período válido para a ausência."); return;
+    }
+    if (absence) Object.assign(absence, record);
+    else state.absences.push({ id: `absence-${Date.now()}-${Math.random().toString(36).slice(2)}`, ...record });
+    saveState();
+  };
+}
+
+function deleteAbsence(absenceId) {
+  state.absences = (state.absences || []).filter(a => a.id !== absenceId);
+  saveState();
 }
 
 function normalizePartRules(savedRules) {
@@ -661,13 +727,13 @@ function normalizeWeeks(weeks) {
   }
   return [...byId.values()].filter(week => !hiddenWeekIds.has(week.id)).sort((a, b) => parseLocalDate(a.id) - parseLocalDate(b.id)).map((week, index) => {
     const defaultWeek = defaultById.get(week.id);
-    const corrected = applyWeekCorrection({
+    const corrected = week.importedPdf ? { ...week } : applyWeekCorrection({
       ...week,
       label: defaultWeek?.label || week.label
     });
     const partsByNumber = new Map((corrected.parts || []).map(part => [Number(part.n), part]));
     for (const part of week.parts || []) {
-      if (part.customManual) partsByNumber.set(Number(part.n), part);
+      if (part.customManual || part.configRuleId) partsByNumber.set(Number(part.n), part);
     }
     return {
       ...corrected,
@@ -857,11 +923,11 @@ function renderWeek() {
           <div class="stat"><strong>${activePeople().length}</strong><span>ativos</span></div>
         </div></section>
         <section class="panel"><h2>Presidente</h2>
-          <label>Nome${personSelect("chairman", schedule.chairman, eligible("chairman"), week.id, "chairman")}</label>
+          <label>Nome${personSelect("chairman", schedule.chairman, eligible("chairman", week.id), week.id, "chairman")}</label>
           <p class="muted">A oracao inicial acompanha o presidente quando a regra esta ligada.</p>
         </section>
         <section class="panel"><h2>Oracao final</h2>
-          <label>Nome${personSelect("closingPrayer", schedule.closingPrayer || "", eligibleClosingPrayer(), week.id, "closingPrayer")}</label>
+          <label>Nome${personSelect("closingPrayer", schedule.closingPrayer || "", eligibleClosingPrayer(week.id), week.id, "closingPrayer")}</label>
         </section>
         ${renderManualPartPanel(week)}
       </aside>
@@ -1028,17 +1094,17 @@ function renderPartRow(week, schedule, part) {
   const primaryType = part.type === "study" ? "studyConductor" : singleMinistry ? "ministrySingle" : part.type;
   const helperType = part.type === "study" ? "studyReader" : "ministry";
   const primaryPeople = partRule(part)
-    ? eligibleForPart(part, primaryType)
+    ? eligibleForPart(part, primaryType, week.id)
     : state.rules.fiveMinuteTalkBrothers && isFiveMinuteTalk(part)
-      ? eligibleFiveMinuteTalk()
+      ? eligibleFiveMinuteTalk(week.id)
       : part.type === "life"
         ? eligibleLifePart(week.id)
-        : eligibleForPart(part, primaryType);
+        : eligibleForPart(part, primaryType, week.id);
   const primaryLabel = part.type === "study" ? "Dirigente" : "Designado";
   const helperLabel = part.type === "study" ? "Leitor" : "Ajudante";
   return `<div class="part-row"><div class="part-number">${part.n}</div><div class="part-title"><strong>${esc(part.title)}</strong><span>${esc(part.minutes)}</span></div>
     ${assignmentSelect(primaryLabel, `part-${part.n}-primary`, assignment.primary || "", primaryPeople, week.id, part.n, "primary")}
-    ${(part.type === "ministry" && ministryPartHasHelper(part)) || part.type === "study" ? assignmentSelect(helperLabel, `part-${part.n}-helper`, assignment.helper || "", part.type === "ministry" ? eligibleMinistryHelper(assignment.primary, part) : eligible(helperType), week.id, part.n, "helper") : "<span></span>"}
+    ${(part.type === "ministry" && ministryPartHasHelper(part)) || part.type === "study" ? assignmentSelect(helperLabel, `part-${part.n}-helper`, assignment.helper || "", part.type === "ministry" ? eligibleMinistryHelper(assignment.primary, part, week.id) : eligible(helperType, week.id), week.id, part.n, "helper") : "<span></span>"}
   </div>`;
 }
 
@@ -1047,7 +1113,8 @@ function assignmentSelect(label, id, selected, people, weekId, partNumber, field
 }
 
 function personSelect(id, selected, people, weekId, partNumber, field) {
-  const options = [`<option value="">A definir</option>`].concat(people.map(person => {
+  const availablePeople = people.filter(person => !absentDuringWeek(person, weekId));
+  const options = [`<option value="">A definir</option>`].concat(availablePeople.map(person => {
     const recent = lastAssignment(person.name);
     const usedThisMonth = monthlyAssignmentCount(person.name, weekId) > 0;
     const weekDetails = state.rules.noSamePersonSameWeek ? weeklyAssignmentDetails(person.name, weekId, partNumber, field) : [];
@@ -1062,6 +1129,7 @@ function personSelect(id, selected, people, weekId, partNumber, field) {
       : " style=\"color:#c34d4d;font-weight:800\"";
     return `<option value="${esc(person.name)}" ${person.name === selected ? "selected" : ""}${usedThisWeek ? " disabled" : ""} class="${optionClass}"${optionStyle}>${esc(person.name + suffix)}</option>`;
   }));
+  if (selected && !availablePeople.some(p => p.name === selected)) options.push(`<option value="${esc(selected)}" selected disabled>${esc(selected)} — indisponível nesta semana</option>`);
   const selectedUsed = selected && monthlyAssignmentCount(selected, weekId) > 0;
   const selectedPerson = state.people.find(person => person.name === selected);
   const selectedGenderClass = selectedPerson?.gender === "M" ? "selected-male" : selectedPerson?.gender === "F" ? "selected-female" : "";
@@ -1075,7 +1143,9 @@ function renderPrograms() {
     (groups[year] ||= []).push(week);
     return groups;
   }, {});
-  view.innerHTML = `<section class="panel"><div class="month-generate-bar">
+  view.innerHTML = `<section class="panel"><h2>Importar apostila PDF</h2><p class="muted">Selecione uma apostila Nossa Vida e Ministério Cristão. O sistema identifica as semanas e extrai as imagens de Tesouros da Palavra de Deus. Revise a prévia antes de confirmar. As designações atuais serão preservadas.</p>
+    <div class="toolbar"><label class="button primary">Selecionar apostila PDF<input type="file" id="importWorkbookPdf" accept="application/pdf,.pdf" hidden></label><span id="pdfImportStatus" class="muted"></span></div>
+    <div id="pdfImportPreview"></div></section><section class="panel"><div class="month-generate-bar">
     <label>Mes para gerar<select id="generationMonthSelect">${monthOptions().map(option => `<option value="${esc(option.value)}" ${option.value === state.generationMonth ? "selected" : ""}>${esc(option.label)}</option>`).join("")}</select></label>
     <div class="toolbar">
     <button class="primary" data-action="generate-selected-month">Gerar mes escolhido</button>
@@ -1255,10 +1325,15 @@ function personCapabilitySummary(person) {
 }
 
 function renderPeople() {
-  view.innerHTML = `<section class="panel"><div class="toolbar"><button class="primary" data-action="new-person">Novo publicador</button><button class="ghost" data-action="export-backup">Backup</button></div></section>
+  view.innerHTML = `<section class="panel"><div class="toolbar"><button class="primary" data-action="new-person">Novo publicador</button><button class="ghost" data-action="new-absence">Registrar ausência</button><button class="ghost" data-action="export-backup">Backup</button></div></section>
     <section class="panel table-wrap"><table><thead><tr><th>Nome</th><th>Sexo</th><th>Privilegio</th><th>Permissoes</th><th>Status</th><th></th></tr></thead><tbody>
-    ${state.people.map(person => `<tr><td>${esc(person.name)}</td><td>${person.gender === "M" ? "Masculino" : "Feminino"}</td><td>${esc(person.role)}</td><td>${personCapabilitySummary(person)}</td><td>${person.blocked ? "Indisponivel" : "Ativo"}</td><td><div class="row-actions"><button class="ghost" data-edit-person="${person.id}">Editar</button><button class="ghost" data-toggle-person="${person.id}">${person.blocked ? "Ativar" : "Indispor"}</button></div></td></tr>`).join("")}
-    </tbody></table></section>`;
+    ${state.people.map(person => `<tr><td>${esc(person.name)}</td><td>${person.gender === "M" ? "Masculino" : "Feminino"}</td><td>${esc(person.role)}</td><td>${personCapabilitySummary(person)}</td><td>${esc(absenceSummary(person))}</td><td><div class="row-actions"><button class="ghost" data-edit-person="${person.id}">Editar</button><button class="ghost" data-person-absence="${person.id}">Ausência</button><button class="ghost" data-toggle-person="${person.id}">${person.blocked ? "Ativar" : "Indispor"}</button></div></td></tr>`).join("")}
+    </tbody></table></section>
+    <section class="panel"><h2>Ausências programadas</h2><p class="muted">A pessoa fica fora das designações nas semanas que coincidirem com o período, voltando automaticamente a ficar disponível após a data final.</p>
+    <div class="toolbar"><button class="primary" data-action="new-absence">Nova ausência</button></div>
+    <div class="table-wrap"><table><thead><tr><th>Publicador</th><th>Início</th><th>Fim</th><th>Motivo</th><th>Ações</th></tr></thead><tbody>
+    ${(state.absences || []).slice().sort((a,b) => a.start.localeCompare(b.start)).map(a => `<tr><td>${esc(state.people.find(p => p.id === a.personId)?.name || "Publicador removido")}</td><td>${esc(a.start.split("-").reverse().join("/"))}</td><td>${esc(a.end.split("-").reverse().join("/"))}</td><td>${esc(a.reason || "—")}</td><td><div class="row-actions"><button class="ghost" data-edit-absence="${esc(a.id)}">Editar</button><button class="danger" data-delete-absence="${esc(a.id)}">Excluir</button></div></td></tr>`).join("") || '<tr><td colspan="5">Nenhuma ausência cadastrada.</td></tr>'}
+    </tbody></table></div></section>`;
 }
 
 function renderRules() {
@@ -1325,6 +1400,7 @@ function renderPartRuleSettings() {
     </select></label>
     <div class="part-rule-options"><strong>Sexo permitido</strong>${[["M", "Homens"], ["F", "Mulheres"]].map(([value, label]) => `<label><input type="checkbox" data-part-rule="${esc(key)}" data-part-rule-list="genders" value="${value}" ${rule.genders?.includes(value) ? "checked" : ""}> ${label}</label>`).join("")}</div>
     <div class="part-rule-options"><strong>Privilégio permitido</strong>${roles.map(role => `<label><input type="checkbox" data-part-rule="${esc(key)}" data-part-rule-list="roles" value="${esc(role)}" ${rule.roles?.includes(role) ? "checked" : ""}> ${esc(role)}</label>`).join("")}</div>
+    <div class="toolbar"><button type="button" class="primary" data-action="save-part-configuration">Salvar configuração</button></div>
   </article>`;
 }
 
@@ -1367,7 +1443,7 @@ function updatePartRuleControl(control) {
     else values.delete(control.value);
     rule[list] = [...values];
   }
-  render();
+  saveState();
 }
 
 function updateConfiguredPartName() {
@@ -1379,7 +1455,7 @@ function updateConfiguredPartName() {
   const oldRule = state.partRules?.[oldKey] || defaultRuleForPart(part);
   part.title = newName;
   state.partRules[oldKey] = { ...oldRule, label: newName };
-  render();
+  saveState();
 }
 
 function specialEventInputs(key, label) {
@@ -1394,28 +1470,28 @@ function specialEventInputs(key, label) {
 function generateScheduleForWeek(week) {
   const used = new Set();
   const schedule = { chairman: "", closingPrayer: "", parts: {} };
-  const chairman = pickPerson(eligible("chairman"), used, "Presidente");
+  const chairman = pickPerson(eligible("chairman", week.id), used, "Presidente");
   if (chairman) { schedule.chairman = chairman.name; used.add(chairman.name); }
   for (const part of week.parts) {
     const singleMinistry = isSinglePersonMinistryPart(part);
     const primaryType = part.type === "study" ? "studyConductor" : singleMinistry ? "ministrySingle" : part.type;
     const primaryPeople = partRule(part)
-      ? eligibleForPart(part, primaryType)
+      ? eligibleForPart(part, primaryType, week.id)
       : state.rules.fiveMinuteTalkBrothers && isFiveMinuteTalk(part)
-        ? eligibleFiveMinuteTalk()
+        ? eligibleFiveMinuteTalk(week.id)
         : part.type === "life"
           ? eligibleLifePart(week.id)
-          : eligibleForPart(part, primaryType);
+          : eligibleForPart(part, primaryType, week.id);
     const primary = pickPerson(primaryPeople, used);
     if (primary) used.add(primary.name);
     const assignment = { primary: primary?.name || "" };
     if (part.type === "ministry" && ministryPartHasHelper(part)) {
-      const helper = pickPerson(eligibleMinistryHelper(primary?.name, part), used, "Ajudante");
+      const helper = pickPerson(eligibleMinistryHelper(primary?.name, part, week.id), used, "Ajudante");
       if (helper) used.add(helper.name);
       assignment.helper = helper?.name || "";
     }
     if (part.type === "study") {
-      const reader = pickPerson(eligible("studyReader"), used);
+      const reader = pickPerson(eligible("studyReader", week.id), used);
       if (reader) used.add(reader.name);
       assignment.helper = reader?.name || "";
     }
@@ -1454,8 +1530,8 @@ function clearCurrentWeek() {
   toast("Semana limpa.");
 }
 
-function eligible(type) {
-  const people = activePeople();
+function eligible(type, weekId = "") {
+  const people = activePeople(weekId);
   return people.filter(person => {
     const capabilities = personCapabilities(person);
     if (type === "ministry") return ["Publicador batizado", "Publicadora batizada"].includes(person.role) && (capabilities.ministryPrimary || capabilities.ministryHelper);
@@ -1494,21 +1570,21 @@ function ministryPartHasHelper(part) {
   return !isSinglePersonMinistryPart(part);
 }
 
-function eligibleForPart(part, fallbackType = "ministry") {
+function eligibleForPart(part, fallbackType = "ministry", weekId = "") {
   const rule = partRule(part);
-  if (!rule) return eligible(fallbackType);
+  if (!rule) return eligible(fallbackType, weekId);
   const isWhatWouldYouSay = normalizeText(part.title || "") === "o que voce diria";
   const allowedRoles = isWhatWouldYouSay && state.rules.whatWouldYouSayEldersServants
     ? ["Anciao", "Servo ministerial"]
     : rule.roles;
-  return activePeople().filter(person =>
+  return activePeople(weekId).filter(person =>
     (!rule.genders?.length || rule.genders.includes(person.gender)) &&
     (!allowedRoles?.length || allowedRoles.includes(person.role))
   );
 }
 
-function eligibleMinistryHelper(primaryName = "", part = null) {
-  const people = part ? eligibleForPart(part, "ministry") : eligible("ministry");
+function eligibleMinistryHelper(primaryName = "", part = null, weekId = "") {
+  const people = part ? eligibleForPart(part, "ministry", weekId) : eligible("ministry", weekId);
   if (!state.rules.ministrySameGenderPair || !primaryName) return people;
   const primary = state.people.find(person => person.name === primaryName);
   if (!primary) return people;
@@ -1519,20 +1595,20 @@ function isFiveMinuteTalk(part) {
   return /\b5\s*min\b/i.test(part.minutes || "") && /discurso/i.test(part.title || "");
 }
 
-function eligibleFiveMinuteTalk() {
-  return activePeople().filter(person => person.gender === "M" && person.role === "Publicador batizado");
+function eligibleFiveMinuteTalk(weekId = "") {
+  return activePeople(weekId).filter(person => person.gender === "M" && person.role === "Publicador batizado");
 }
 
-function eligibleClosingPrayer() {
-  return activePeople().filter(person => person.gender === "M");
+function eligibleClosingPrayer(weekId = "") {
+  return activePeople(weekId).filter(person => person.gender === "M");
 }
 
 function eligibleLifePart(weekId) {
-  const people = activePeople();
+  const people = activePeople(weekId);
   return people.filter(person => person.role === "Anciao" || person.role === "Servo ministerial");
 }
 
-function activePeople() { return state.people.filter(person => !person.blocked); }
+function activePeople(weekId = "") { return state.people.filter(person => !person.blocked && !absentDuringWeek(person, weekId)); }
 function pickPerson(people, used, role = "") {
   const sorted = [...people].sort((a, b) =>
     assignmentCount(a.name, role) - assignmentCount(b.name, role) ||
@@ -1682,6 +1758,7 @@ function removeManualPart(value) {
 
 function updateAssignment(target) {
   const { week, part, field } = target.dataset;
+  if (target.value && isUnavailableForWeek(target.value, week)) { toast("Publicador ausente ou indisponível nesta semana."); render(); return; }
   if (part !== "closingPrayer" && state.rules.noSamePersonSameWeek && target.value && weeklyAssignmentDetails(target.value, week, part, field).length) {
     toast("Esta pessoa ja esta designada nesta semana.");
     render();
@@ -1886,6 +1963,145 @@ function exportBackup() {
   URL.revokeObjectURL(link.href);
 }
 
+// Leitura local do PDF: o arquivo nao e enviado a outros servicos.
+let pendingPdfImport = null;
+const pdfMonthNumbers = { JANEIRO:1, FEVEREIRO:2, MARCO:3, ABRIL:4, MAIO:5, JUNHO:6, JULHO:7, AGOSTO:8, SETEMBRO:9, OUTUBRO:10, NOVEMBRO:11, DEZEMBRO:12 };
+function normalizedPdfText(value) {
+  return String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().replace(/\s+/g, " ").trim();
+}
+function parseWorkbookHeading(raw, year) {
+  const s = normalizedPdfText(raw).replace(/[–—]/g, "-");
+  const pattern = /(\d{1,2})\s*-\s*(\d{1,2})\s+DE\s+(JANEIRO|FEVEREIRO|MARCO|ABRIL|MAIO|JUNHO|JULHO|AGOSTO|SETEMBRO|OUTUBRO|NOVEMBRO|DEZEMBRO)|(?:\d{1,2})\s+DE\s+(JANEIRO|FEVEREIRO|MARCO|ABRIL|MAIO|JUNHO|JULHO|AGOSTO|SETEMBRO|OUTUBRO|NOVEMBRO|DEZEMBRO)\s*-\s*(\d{1,2})\s+DE\s+(JANEIRO|FEVEREIRO|MARCO|ABRIL|MAIO|JUNHO|JULHO|AGOSTO|SETEMBRO|OUTUBRO|NOVEMBRO|DEZEMBRO)/;
+  const m = s.match(pattern);
+  if (!m) return null;
+  let d, mon, endDay, endMonth;
+  if (m[1]) { d = Number(m[1]); mon = pdfMonthNumbers[m[3]]; endDay = Number(m[2]); endMonth = mon; }
+  else {
+    const alt = s.match(/(\d{1,2})\s+DE\s+(JANEIRO|FEVEREIRO|MARCO|ABRIL|MAIO|JUNHO|JULHO|AGOSTO|SETEMBRO|OUTUBRO|NOVEMBRO|DEZEMBRO)\s*-\s*(\d{1,2})\s+DE\s+(JANEIRO|FEVEREIRO|MARCO|ABRIL|MAIO|JUNHO|JULHO|AGOSTO|SETEMBRO|OUTUBRO|NOVEMBRO|DEZEMBRO)/);
+    if (!alt) return null;
+    d=Number(alt[1]); mon=pdfMonthNumbers[alt[2]]; endDay=Number(alt[3]); endMonth=pdfMonthNumbers[alt[4]];
+  }
+  const startYear = mon > 10 && endMonth < 3 ? year - 1 : year;
+  const start = new Date(startYear, mon - 1, d);
+  const end = addDays(start, 6);
+  if (end.getDate() !== endDay || end.getMonth() + 1 !== endMonth) return null;
+  return { id: iso(start), from:iso(start), to:iso(end), label:formatWeekRange(start,end) };
+}
+function pdfLines(items) {
+  const lines=[];
+  for (const item of items) {
+    const x=item.transform?.[4] || 0, y=item.transform?.[5] || 0;
+    let line=lines.find(row=>Math.abs(row.y-y)<2.7 && Math.abs(row.x-x)<250);
+    if(!line){line={x,y,items:[]};lines.push(line);}
+    line.items.push({x,t:item.str});
+  }
+  return lines.map(line=>({...line, text:line.items.sort((a,b)=>a.x-b.x).map(item=>item.t).join(' ').replace(/\s+/g,' ').trim()})).sort((a,b)=>b.y-a.y || a.x-b.x);
+}
+function getPdfPartNames(lines, section, boundLeft, boundRight) {
+  const rows = lines.filter(l=>l.x >= boundLeft && l.x < boundRight && /^(?:\d{1,2})\s*[.]\s*/.test(l.text));
+  return rows.map(r=>r.text.match(/^(\d{1,2})\s*[.]\s*(.+?)(?:\s*\(\d+\s*min\))?$/i)).filter(Boolean).map(m=>({n:Number(m[1]), title:m[2].trim(), section}));
+}
+function pdfWeekParts(lines, fallback) {
+  // Os titulos sao sugestoes; nomes longos quebrados em linhas serao mostrados para revisao.
+  const left = getPdfPartNames(lines,"treasures",20,258).filter(p=>p.n<=3);
+  const ministry = getPdfPartNames(lines,"ministry",255,504).filter(p=>p.n>=4);
+  const life = getPdfPartNames(lines,"life",255,504).filter(p=>p.n>=7);
+  const base = clone(fallback?.parts || defaultParts);
+  const replacements = [...left, ...ministry, ...life];
+  for(const p of replacements){
+    const existing=base.find(x=>x.n===p.n);
+    if (existing && normalizedPdfText(existing.title) !== normalizedPdfText(p.title)) existing.title=p.title;
+  }
+  return base;
+}
+function workbookImageFromPage(page, cover=false) {
+  const rect=cover ? [0, page.view[3]*.43, page.view[2],page.view[3]] : [page.view[2]*.064,page.view[3]*.135,page.view[2]*.493,page.view[3]*.327];
+  const targetWidth=cover?640:520;
+  const scale=Math.min(2.2,targetWidth/(rect[2]-rect[0]));
+  const viewport=page.getViewport({scale});
+  const full=document.createElement("canvas");full.width=Math.round(viewport.width); full.height=Math.round(viewport.height);
+  const context=full.getContext("2d",{alpha:false});
+  return page.render({canvasContext:context,viewport}).promise.then(()=>{
+    const crop=document.createElement("canvas");crop.width=Math.round((rect[2]-rect[0])*scale);crop.height=Math.round((rect[3]-rect[1])*scale);
+    crop.getContext("2d").drawImage(full,Math.round(rect[0]*scale),Math.round(rect[1]*scale),crop.width,crop.height,0,0,crop.width,crop.height);
+    return crop.toDataURL("image/jpeg",0.77);
+  });
+}
+async function loadPdfEngine() {
+  if (window.pdfjsLib) return window.pdfjsLib;
+  await new Promise((resolve,reject)=>{
+    const script=document.createElement('script');
+    script.src='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js';
+    script.onload=resolve; script.onerror=()=>reject(new Error('Não foi possível carregar o leitor de PDF. Verifique a internet.'));
+    document.head.appendChild(script);
+  });
+  window.pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+  return window.pdfjsLib;
+}
+async function previewWorkbookPdf(file) {
+  if(!file || !/\.pdf$/i.test(file.name)){toast('Selecione um arquivo PDF.');return;}
+  const status=document.getElementById('pdfImportStatus');const panel=document.getElementById('pdfImportPreview');
+  if(status) status.textContent='Analisando apostila e imagens…';
+  pendingPdfImport=null;
+  try {
+    const engine=await loadPdfEngine();
+    const book=await engine.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise;
+    const coverPage=await book.getPage(1);
+    const coverLines=pdfLines((await coverPage.getTextContent()).items);
+    const coverText=normalizedPdfText(coverLines.map(l=>l.text).join(' '));
+    let year=Number((coverText.match(/20\d{2}/)||file.name.match(/20\d{2}/)||[])[0]);
+    if(!year) throw new Error('Não foi possível identificar o ano na capa.');
+    const coverImage=await workbookImageFromPage(coverPage,true);
+    const weeks=[];
+    for(let n=2;n<=book.numPages;n++){
+      const page=await book.getPage(n);
+      const lines=pdfLines((await page.getTextContent()).items);
+      const top=lines.filter(l=>l.y>page.view[3]*0.91).map(l=>l.text).join(' ');
+      const heading=parseWorkbookHeading(top,year);
+      if(!heading || weeks.some(w=>w.id===heading.id))continue;
+      const existing=state.weeks.find(w=>w.id===heading.id);
+      const official=weekCorrections[heading.id];
+      const readingMatch=normalizedPdfText(top).match(/(?:JEREMIAS|LAMENTACOES|EZEQUIEL|ISAIAS|DANIEL|OSEIAS|JOEL|AMOS|OBADIAS|JONAS|MIQUEIAS|NAUM|HABACUQUE|SOFONIAS|AGEU|ZACARIAS|MALAQUIAS|SALMOS|PROVERBIOS|ATOS|ROMANOS|MATEUS|MARCOS|LUCAS|JOAO|APOCALIPSE)\s+\d+(?:\s*[-–]\s*\d+)?/);
+      const reading=readingMatch?.[0] || official?.reading || existing?.reading || 'CONFERIR LEITURA';
+      const pageText=normalizedPdfText(lines.map(l=>l.text).join(' '));
+      const usesCover = /VEJA A IMAGEM DA CAPA/.test(pageText);
+      const image=usesCover ? coverImage : await workbookImageFromPage(page);
+      const original=existing||generateWeeks(heading.id,1)[0];
+      const songs=official?.songs || original.songs;
+      const parts=official?.parts || pdfWeekParts(lines,original);
+      weeks.push({...original,...heading,reading,songs,parts,image,importedPdf:true});
+      if(status)status.textContent=`${weeks.length} semana(s) identificada(s)…`;
+    }
+    if(!weeks.length)throw new Error('Nenhuma semana foi identificada. Confirme que o PDF é da apostila oficial.');
+    pendingPdfImport={name:file.name,weeks};
+    if(!panel || !panel.isConnected){toast('Abra Programações novamente para visualizar a importação.');return;}
+    panel.innerHTML=`<p><strong>${esc(weeks.length)} semanas identificadas</strong> em ${esc(file.name)}. Confira antes de importar:</p><div class="pdf-import-list">${weeks.map(w=>`<label class="pdf-import-row"><input type="checkbox" data-pdf-week="${esc(w.id)}" checked><img src="${w.image}" alt="Imagem de ${esc(w.label)}"><span><strong>${esc(w.label)}</strong><small>${esc(w.reading)}</small><small>${esc(w.parts?.[0]?.title||'')}</small><small>${state.weeks.some(x=>x.id===w.id)?'Já cadastrada — escolha como atualizar':'Nova semana'}</small></span></label>`).join('')}</div><label class="pdf-import-mode">Se a semana já existir<select id="pdfImportMode"><option value="skip">Manter semana existente (mais seguro)</option><option value="image">Atualizar somente imagem</option><option value="content">Atualizar imagem e conteúdo, preservar designações</option></select></label><div class="toolbar"><button class="primary" data-action="confirm-workbook-import">Confirmar importação</button><button class="ghost" data-action="cancel-workbook-import">Cancelar</button></div>`;
+    if(status)status.textContent='Prévia pronta. Nenhuma mudança foi salva ainda.';
+  } catch(error){if(status)status.textContent=`Erro: ${error.message}`;toast(error.message);}
+}
+async function confirmWorkbookImport() {
+  if(!pendingPdfImport)return;
+  const chosen=new Set([...document.querySelectorAll('[data-pdf-week]:checked')].map(el=>el.dataset.pdfWeek));
+  const mode=document.getElementById('pdfImportMode')?.value||'skip';
+  if(!chosen.size){toast('Marque pelo menos uma semana.');return;}
+  let added=0,updated=0,skipped=0;
+  for(const incoming of pendingPdfImport.weeks){
+    if(!chosen.has(incoming.id))continue;
+    const index=state.weeks.findIndex(w=>w.id===incoming.id);
+    if(index<0){state.weeks.push(incoming);added++;continue;}
+    if(mode==='skip'){skipped++;continue;}
+    const original=state.weeks[index];
+    state.weeks[index]=mode==='image'?{...original,image:incoming.image,importedPdf:true}:
+      {...original,reading:incoming.reading,songs:incoming.songs,parts:incoming.parts,image:incoming.image,importedPdf:true};
+    updated++;
+  }
+  state.weeks.sort((a,b)=>a.id.localeCompare(b.id));
+  pendingPdfImport=null;
+  await saveState();
+  toast(`Importação: ${added} novas, ${updated} atualizadas, ${skipped} mantidas.`);
+}
+function cancelWorkbookImport(){pendingPdfImport=null;const panel=document.getElementById('pdfImportPreview');if(panel)panel.innerHTML='';const status=document.getElementById('pdfImportStatus');if(status)status.textContent='Importação cancelada.';}
+
 function importBackup(file) {
   const reader = new FileReader();
   reader.onload = () => {
@@ -1930,6 +2146,10 @@ function esc(value) {
   return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
 }
 
+document.getElementById("dialogCancel").addEventListener("click", () => {
+  document.getElementById("dialog").close("cancel");
+});
+
 document.addEventListener("click", event => {
   const navButton = event.target.closest("[data-view]");
   if (navButton) {
@@ -1955,8 +2175,12 @@ document.addEventListener("click", event => {
   if (action === "print-program-sheet") window.print();
   if (action === "open-assignments") setView("assignments");
   if (action === "add-month") addMonth();
+  if (action === "confirm-workbook-import") { confirmWorkbookImport(); return; }
+  if (action === "cancel-workbook-import") { cancelWorkbookImport(); return; }
   if (action === "new-person") openPersonForm();
+  if (action === "new-absence") editAbsence();
   if (action === "add-manual-rule") addManualRule();
+  if (action === "save-part-configuration") { const input = document.getElementById("partConfigNameInput"); const part = selectedPartForConfiguration().part; if (part && input?.value.trim() && input.value.trim() !== part.title) updateConfiguredPartName(); else saveState(); }
   if (action === "add-manual-part") addManualPart();
   if (action === "export-backup") exportBackup();
   if (action === "reset-data") resetData();
@@ -1966,6 +2190,12 @@ document.addEventListener("click", event => {
     if (person) person.blocked = !person.blocked;
     render();
   }
+  const personAbsence = event.target.closest("[data-person-absence]");
+  if (personAbsence) editAbsence("", personAbsence.dataset.personAbsence);
+  const editAbsenceButton = event.target.closest("[data-edit-absence]");
+  if (editAbsenceButton) editAbsence(editAbsenceButton.dataset.editAbsence);
+  const deleteAbsenceButton = event.target.closest("[data-delete-absence]");
+  if (deleteAbsenceButton) deleteAbsence(deleteAbsenceButton.dataset.deleteAbsence);
   const editPerson = event.target.closest("[data-edit-person]");
   if (editPerson) openPersonForm(editPerson.dataset.editPerson);
   const rule = event.target.closest("[data-rule]");
@@ -2009,6 +2239,7 @@ document.addEventListener("change", event => {
   if (event.target.matches("[data-special-event]")) updateSpecialEvent(event.target);
   if (event.target.id === "monthStartInput" || event.target.id === "weekCountInput") confirmAction("Recriar semanas?", "As semanas e designacoes geradas serao reiniciadas.", regenerateWeeksFromSettings);
   if (event.target.id === "importBackup" && event.target.files[0]) importBackup(event.target.files[0]);
+  if (event.target.id === "importWorkbookPdf" && event.target.files[0]) previewWorkbookPdf(event.target.files[0]);
 });
 
 document.addEventListener("input", event => {

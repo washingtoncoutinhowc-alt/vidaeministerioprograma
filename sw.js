@@ -1,16 +1,11 @@
-const CACHE_NAME = "pvm-app-v29";
+const CACHE_NAME = "pvm-app-v32";
 const ASSETS = [
   "./",
   "./index.html",
   "./styles.css",
   "./app.js",
   "./manifest.webmanifest",
-  "./assets/vida-ministerio-icon.png",
-  "./assets/weeks/week-1.jpg",
-  "./assets/weeks/week-2.jpg",
-  "./assets/weeks/week-3.jpg",
-  "./assets/weeks/week-4.jpg",
-  "./assets/weeks/week-5.jpg"
+  "./vida-ministerio-icon.ico"
 ];
 
 self.addEventListener("install", event => {

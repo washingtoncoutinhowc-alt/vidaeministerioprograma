@@ -323,3 +323,5 @@ th { color: var(--muted); font-size: 12px; text-transform: uppercase; }
   .assignment-grid { display: block; }
   .assignment-card { page-break-after: always; min-height: 92vh; }
 }
+
+.pdf-import-list {display:grid;gap:10px;margin:18px 0;max-height:500px;overflow:auto} .pdf-import-row{display:flex;align-items:center;gap:14px;padding:10px;border:1px solid var(--border,#d9dee4);border-radius:12px;cursor:pointer} .pdf-import-row input{width:20px;flex-shrink:0} .pdf-import-row img{width:120px;height:72px;object-fit:cover;border-radius:8px} .pdf-import-row span{display:grid;gap:4px} .pdf-import-row small{display:block;color:var(--muted,#667085)} .pdf-import-mode{display:grid;gap:8px;margin:18px 0;max-width:420px} 
