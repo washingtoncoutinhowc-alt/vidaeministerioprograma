@@ -1970,22 +1970,50 @@ function normalizedPdfText(value) {
   return String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().replace(/\s+/g, " ").trim();
 }
 function parseWorkbookHeading(raw, year) {
-  const s = normalizedPdfText(raw).replace(/[–—]/g, "-");
-  const pattern = /(\d{1,2})\s*-\s*(\d{1,2})\s+DE\s+(JANEIRO|FEVEREIRO|MARCO|ABRIL|MAIO|JUNHO|JULHO|AGOSTO|SETEMBRO|OUTUBRO|NOVEMBRO|DEZEMBRO)|(?:\d{1,2})\s+DE\s+(JANEIRO|FEVEREIRO|MARCO|ABRIL|MAIO|JUNHO|JULHO|AGOSTO|SETEMBRO|OUTUBRO|NOVEMBRO|DEZEMBRO)\s*-\s*(\d{1,2})\s+DE\s+(JANEIRO|FEVEREIRO|MARCO|ABRIL|MAIO|JUNHO|JULHO|AGOSTO|SETEMBRO|OUTUBRO|NOVEMBRO|DEZEMBRO)/;
-  const m = s.match(pattern);
-  if (!m) return null;
-  let d, mon, endDay, endMonth;
-  if (m[1]) { d = Number(m[1]); mon = pdfMonthNumbers[m[3]]; endDay = Number(m[2]); endMonth = mon; }
-  else {
-    const alt = s.match(/(\d{1,2})\s+DE\s+(JANEIRO|FEVEREIRO|MARCO|ABRIL|MAIO|JUNHO|JULHO|AGOSTO|SETEMBRO|OUTUBRO|NOVEMBRO|DEZEMBRO)\s*-\s*(\d{1,2})\s+DE\s+(JANEIRO|FEVEREIRO|MARCO|ABRIL|MAIO|JUNHO|JULHO|AGOSTO|SETEMBRO|OUTUBRO|NOVEMBRO|DEZEMBRO)/);
-    if (!alt) return null;
-    d=Number(alt[1]); mon=pdfMonthNumbers[alt[2]]; endDay=Number(alt[3]); endMonth=pdfMonthNumbers[alt[4]];
+  // PDF oficiais podem fragmentar letras, colocar espacos dentro de palavras
+  // e usar diferentes tipos de travessao. O cabecalho e normalizado primeiro.
+  const compact = normalizedPdfText(raw)
+    .replace(/^\s*\d{1,2}\s+(?=\d{1,2}\s*(?:-|DE))/, '')
+    .replace(/[\u0000-\u001f\u007f]/g, ' ')
+    .replace(/[‐‑‒–—−]/g, '-')
+    .replace(/\s+/g, '');
+  const months = '(JANEIRO|FEVEREIRO|MARCO|ABRIL|MAIO|JUNHO|JULHO|AGOSTO|SETEMBRO|OUTUBRO|NOVEMBRO|DEZEMBRO)';
+  let match = compact.match(new RegExp('(\\d{1,2})-(\\d{1,2})DE'+months));
+  let day, month, endDay, endMonth;
+  if (match) {
+    day=Number(match[1]); endDay=Number(match[2]);
+    month=pdfMonthNumbers[match[3]]; endMonth=month;
+  } else {
+    match=compact.match(new RegExp('(\\d{1,2})DE'+months+'-(\\d{1,2})DE'+months));
+    if (!match) return null;
+    day=Number(match[1]); month=pdfMonthNumbers[match[2]];
+    endDay=Number(match[3]); endMonth=pdfMonthNumbers[match[4]];
   }
-  const startYear = mon > 10 && endMonth < 3 ? year - 1 : year;
-  const start = new Date(startYear, mon - 1, d);
-  const end = addDays(start, 6);
-  if (end.getDate() !== endDay || end.getMonth() + 1 !== endMonth) return null;
-  return { id: iso(start), from:iso(start), to:iso(end), label:formatWeekRange(start,end) };
+  if (!month || !endMonth || day<1 || day>31 || endDay<1 || endDay>31) return null;
+  // Quando o cabeçalho atravessa dezembro/janeiro, o ano da capa é o
+  // ano de inicio do volume (novembro/dezembro) ou o ano da semana.
+  const start = new Date(year,month-1,day);
+  const end = addDays(start,6);
+  if(end.getDate()!==endDay || end.getMonth()+1!==endMonth) return null;
+  return {id:iso(start),from:iso(start),to:iso(end),label:formatWeekRange(start,end)};
+}
+function pdfHeadingFromPage(items, page, year) {
+  const height=page.view[3]-page.view[1];
+  // Primeiro usa elementos acima de 20% da pagina, em ordem de leitura.
+  // Se houver coordenadas transformadas incomuns, usa os primeiros itens.
+  const topItems=items.filter(item => Number.isFinite(item.transform?.[5]) && item.transform[5] > page.view[1] + height*.80);
+  const topText=topItems.map(item=>item.str).join(' ');
+  const candidates=[topText,items.slice(0,65).map(item=>item.str).join(' ')];
+  for(const candidate of candidates){
+    const heading=parseWorkbookHeading(candidate,year);
+    if(heading){
+      const normalized=normalizedPdfText(candidate);
+      // Evita confundir quadros, anuncios e datas dentro de outras paginas.
+      if(normalized.includes('TESOUROS DA') && /(?:JEREMIAS|LAMENTACOES|EZEQUIEL|ISAIAS|DANIEL|OSEIAS|JOEL|AMOS|OBADIAS|JONAS|MIQUEIAS|NAUM|HABACUQUE|SOFONIAS|AGEU|ZACARIAS|MALAQUIAS|SALMOS|PROVERBIOS|ATOS|ROMANOS|MATEUS|MARCOS|LUCAS|JOAO|APOCALIPSE)/.test(normalized))
+        return {heading,top:normalized};
+    }
+  }
+  return null;
 }
 function pdfLines(items) {
   const lines=[];
@@ -2055,17 +2083,19 @@ async function previewWorkbookPdf(file) {
     const weeks=[];
     for(let n=2;n<=book.numPages;n++){
       const page=await book.getPage(n);
-      const lines=pdfLines((await page.getTextContent()).items);
-      const top=lines.filter(l=>l.y>page.view[3]*0.91).map(l=>l.text).join(' ');
-      const heading=parseWorkbookHeading(top,year);
-      if(!heading || weeks.some(w=>w.id===heading.id))continue;
+      const textItems=(await page.getTextContent()).items;
+      const lines=pdfLines(textItems);
+      const detected=pdfHeadingFromPage(textItems,page,year);
+      if(!detected) continue;
+      const {heading,top}=detected;
+      if(weeks.some(w=>w.id===heading.id))continue;
       const existing=state.weeks.find(w=>w.id===heading.id);
       const official=weekCorrections[heading.id];
       const readingMatch=normalizedPdfText(top).match(/(?:JEREMIAS|LAMENTACOES|EZEQUIEL|ISAIAS|DANIEL|OSEIAS|JOEL|AMOS|OBADIAS|JONAS|MIQUEIAS|NAUM|HABACUQUE|SOFONIAS|AGEU|ZACARIAS|MALAQUIAS|SALMOS|PROVERBIOS|ATOS|ROMANOS|MATEUS|MARCOS|LUCAS|JOAO|APOCALIPSE)\s+\d+(?:\s*[-–]\s*\d+)?/);
       const reading=readingMatch?.[0] || official?.reading || existing?.reading || 'CONFERIR LEITURA';
       const pageText=normalizedPdfText(lines.map(l=>l.text).join(' '));
       const usesCover = /VEJA A IMAGEM DA CAPA/.test(pageText);
-      const image=usesCover ? coverImage : await workbookImageFromPage(page);
+      const image=usesCover || heading.id==='2027-04-19' ? coverImage : await workbookImageFromPage(page);
       const original=existing||generateWeeks(heading.id,1)[0];
       const songs=official?.songs || original.songs;
       const parts=official?.parts || pdfWeekParts(lines,original);
